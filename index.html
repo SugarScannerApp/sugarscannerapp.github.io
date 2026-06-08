@@ -17,8 +17,6 @@
       --text-secondary: #5f5e5a;
       --teal: #1D9E75;
       --teal-dark: #0F6E56;
-      --teal-light: #E1F5EE;
-      --teal-text: #085041;
       --red: #E24B4A;
       --red-dark: #A32D2D;
       --red-light: #FCEBEB;
@@ -38,8 +36,6 @@
         --border-md: rgba(255,255,255,0.20);
         --text-primary: #f0ede8;
         --text-secondary: #a0a09a;
-        --teal-light: #04342C;
-        --teal-text: #9FE1CB;
         --red-light: #501313;
         --amber-light: #412402;
         --amber-text: #FAC775;
@@ -59,277 +55,77 @@
       padding: 2rem 1rem 4rem;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { font-size: 22px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    header p { font-size: 14px; color: var(--text-secondary); margin-top: 6px; }
 
-    header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
+    #app { width: 100%; max-width: 560px; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 
-    header p {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-top: 6px;
-    }
-
-    #app {
-      width: 100%;
-      max-width: 560px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    /* Camera / preview area */
     .camera-frame {
-      width: 100%;
-      border-radius: var(--radius-lg);
-      border: 0.5px solid var(--border);
-      background: var(--surface);
-      overflow: hidden;
-      min-height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%; border-radius: var(--radius-lg); border: 0.5px solid var(--border);
+      background: var(--surface); overflow: hidden; min-height: 260px;
+      display: flex; align-items: center; justify-content: center;
     }
 
     #placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 3rem;
-      color: var(--text-secondary);
-      font-size: 14px;
-      width: 100%;
-      min-height: 260px;
-      border: 1.5px dashed var(--border-md);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; padding: 3rem; color: var(--text-secondary); font-size: 14px;
+      width: 100%; min-height: 260px; border: 1.5px dashed var(--border-md);
       border-radius: var(--radius-lg);
     }
-
     #placeholder i { font-size: 40px; }
 
-    #video {
-      width: 100%;
-      display: none;
-      border-radius: var(--radius-lg);
-    }
-
+    #video { width: 100%; display: none; border-radius: var(--radius-lg); }
     #canvas { display: none; }
+    #preview { width: 100%; border-radius: var(--radius-lg); display: none; }
+    #fileInput { display: none; }
 
-    #preview {
-      width: 100%;
-      border-radius: var(--radius-lg);
-      display: none;
-    }
+    #status { font-size: 13px; color: var(--text-secondary); text-align: center; min-height: 18px; }
 
-    /* Status */
-    #status {
-      font-size: 13px;
-      color: var(--text-secondary);
-      text-align: center;
-      min-height: 18px;
-    }
-
-    /* Buttons */
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
     .btn {
-      padding: 10px 20px;
-      border-radius: var(--radius-md);
-      border: 0.5px solid var(--border-md);
-      background: var(--surface);
-      color: var(--text-primary);
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s, transform 0.1s;
+      padding: 10px 20px; border-radius: var(--radius-md); border: 0.5px solid var(--border-md);
+      background: var(--surface); color: var(--text-primary); font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: background 0.15s, transform 0.1s;
       font-family: inherit;
     }
-
     .btn:hover { background: var(--bg); }
     .btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      background: var(--teal);
-      color: #fff;
-      border-color: var(--teal);
-    }
+    .btn-primary { background: var(--teal); color: #fff; border-color: var(--teal); }
     .btn-primary:hover { background: var(--teal-dark); }
 
-    /* Loader */
-    #loader {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 2rem;
-    }
+    .divider { display: flex; align-items: center; gap: 10px; width: 100%; color: var(--text-secondary); font-size: 12px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    .spinner {
-      width: 32px;
-      height: 32px;
-      border: 2.5px solid var(--border);
-      border-top-color: var(--teal);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    #loader { display: none; flex-direction: column; align-items: center; gap: 12px; padding: 2rem; }
+    .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Result cards */
     #results { width: 100%; }
 
-    .result-card {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1rem 1.25rem;
-      margin-bottom: 1rem;
-    }
+    .result-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+    .result-header { font-size: 15px; font-weight: 500; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-    .result-header {
-      font-size: 15px;
-      font-weight: 500;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-weight: 400;
-    }
-
+    .badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; font-weight: 400; }
     .badge-danger { background: var(--red-light); color: var(--red-dark); }
     .badge-success { background: var(--green-light); color: var(--green-text); }
 
-    .summary-text {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
+    .summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 
-    .sugar-item {
-      border-left: 2.5px solid var(--red);
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.75rem;
-      background: var(--bg);
-      border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    }
-
-    .sugar-name {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .sugar-aka {
-      font-weight: 400;
-      color: var(--text-secondary);
-      font-size: 12px;
-    }
-
-    .sugar-gi {
-      display: inline-block;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      margin-right: 6px;
-      margin-bottom: 4px;
-    }
-
+    .sugar-item { border-left: 2.5px solid var(--red); padding: 0.75rem 1rem; margin-bottom: 0.75rem; background: var(--bg); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+    .sugar-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .sugar-aka { font-weight: 400; color: var(--text-secondary); font-size: 12px; }
+    .sugar-gi { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-right: 6px; margin-bottom: 4px; }
     .gi-high { background: var(--red-light); color: var(--red-dark); }
     .gi-medium { background: var(--amber-light); color: var(--amber-text); }
     .gi-low { background: var(--green-light); color: var(--green-text); }
-
-    .sugar-type {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .sugar-detail {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-top: 4px;
-    }
-
-    .sugar-detail strong {
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    .no-sugar {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
-
-    /* API key note */
-    .api-note {
-      font-size: 12px;
-      color: var(--text-secondary);
-      text-align: center;
-      margin-top: 0.5rem;
-      line-height: 1.6;
-    }
-
-    .api-note a { color: var(--teal); }
-
-    /* API key input */
-    #apiKeySection {
-      width: 100%;
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    #apiKeySection label {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    #apiKeySection input {
-      width: 100%;
-      padding: 8px 12px;
-      border: 0.5px solid var(--border-md);
-      border-radius: var(--radius-md);
-      background: var(--bg);
-      color: var(--text-primary);
-      font-size: 13px;
-      font-family: monospace;
-    }
-
-    #apiKeySection input:focus {
-      outline: none;
-      border-color: var(--teal);
-    }
+    .sugar-type { font-size: 12px; color: var(--text-secondary); }
+    .sugar-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-top: 4px; }
+    .sugar-detail strong { font-weight: 500; color: var(--text-primary); }
+    .no-sugar { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 14px; }
+    .powered-by { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 1rem; opacity: 0.6; }
+    .error-detail { font-size: 11px; color: var(--text-secondary); margin-top: 6px; font-family: monospace; }
   </style>
 </head>
 <body>
@@ -340,33 +136,26 @@
 </header>
 
 <div id="app">
-
-  <!-- API Key input -->
-  <div id="apiKeySection">
-    <label for="apiKey">Anthropic API key</label>
-    <input type="password" id="apiKey" placeholder="sk-ant-..." />
-    <p class="api-note">
-      Your key is used only in your browser and never stored or sent anywhere else.<br>
-      Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
-    </p>
-  </div>
-
-  <!-- Camera area -->
   <div class="camera-frame" id="cameraFrame">
     <div id="placeholder">
       <i class="ti ti-camera"></i>
-      <span>Point your camera at an ingredient label</span>
+      <span>Take a photo or upload an image of an ingredient label</span>
     </div>
     <video id="video" autoplay playsinline></video>
     <canvas id="canvas"></canvas>
     <img id="preview" alt="Captured ingredient label" />
   </div>
 
+  <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)" />
+
   <div id="status"></div>
 
   <div class="btn-row" id="controls">
     <button class="btn btn-primary" onclick="startCamera()">
-      <i class="ti ti-camera"></i> Open camera
+      <i class="ti ti-camera"></i> Take photo
+    </button>
+    <button class="btn" onclick="document.getElementById('fileInput').click()">
+      <i class="ti ti-upload"></i> Upload image
     </button>
   </div>
 
@@ -376,27 +165,20 @@
   </div>
 
   <div id="results"></div>
-
+  <p class="powered-by">Powered by Sugar Scanner AI</p>
 </div>
 
 <script>
   let stream = null;
   let capturedB64 = null;
+  let capturedMediaType = 'image/jpeg';
 
-  function setStatus(msg) {
-    document.getElementById('status').textContent = msg;
-  }
-
-  function setControls(html) {
-    document.getElementById('controls').innerHTML = html;
-  }
+  function setStatus(msg) { document.getElementById('status').textContent = msg; }
+  function setControls(html) { document.getElementById('controls').innerHTML = html; }
 
   async function startCamera() {
     try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' },
-        audio: false
-      });
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
       const video = document.getElementById('video');
       video.srcObject = stream;
       document.getElementById('placeholder').style.display = 'none';
@@ -408,7 +190,7 @@
         <button class="btn" onclick="stopCamera()"><i class="ti ti-x"></i> Cancel</button>
       `);
     } catch (e) {
-      setStatus('Camera access denied — please allow camera permissions and try again.');
+      setStatus('Camera access denied — try uploading an image instead.');
     }
   }
 
@@ -417,7 +199,10 @@
     document.getElementById('video').style.display = 'none';
     document.getElementById('placeholder').style.display = 'flex';
     setStatus('');
-    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Open camera</button>`);
+    setControls(`
+      <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
+      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
+    `);
   }
 
   function capture() {
@@ -427,19 +212,40 @@
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
     capturedB64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
-
+    capturedMediaType = 'image/jpeg';
     if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-
     const preview = document.getElementById('preview');
     preview.src = 'data:image/jpeg;base64,' + capturedB64;
     preview.style.display = 'block';
     document.getElementById('video').style.display = 'none';
-
     setStatus('Photo captured — tap Scan to analyze');
     setControls(`
       <button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
       <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Retake</button>
     `);
+  }
+
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    capturedMediaType = file.type || 'image/jpeg';
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataUrl = e.target.result;
+      capturedB64 = dataUrl.split(',')[1];
+      const preview = document.getElementById('preview');
+      preview.src = dataUrl;
+      preview.style.display = 'block';
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('video').style.display = 'none';
+      setStatus('Image loaded — tap Scan to analyze');
+      setControls(`
+        <button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
+        <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Choose different image</button>
+      `);
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
   }
 
   function retake() {
@@ -448,82 +254,42 @@
     document.getElementById('results').innerHTML = '';
     capturedB64 = null;
     setStatus('');
-    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Open camera</button>`);
+    setControls(`
+      <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
+      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
+    `);
   }
 
   async function analyzeImage() {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    if (!apiKey) {
-      alert('Please enter your Anthropic API key above.');
-      return;
-    }
     if (!capturedB64) return;
-
     document.getElementById('loader').style.display = 'flex';
     document.getElementById('results').innerHTML = '';
     setControls('');
     setStatus('');
 
-    const system = `You are a nutrition expert specializing in identifying hidden sugars in food ingredient labels.
-When given an image of an ingredient label, identify every ingredient that is a form of sugar, sweetener, or sugar alternative.
-Respond ONLY with valid JSON — no markdown fences, no preamble:
-{
-  "ingredients_found": true,
-  "sugar_alternatives": [
-    {
-      "name": "exact name as on label",
-      "common_name": "commonly known as",
-      "type": "refined sugar | natural sugar | sugar alcohol | artificial sweetener | syrup | other",
-      "gi_index": "numeric value or range, or N/A",
-      "gi_category": "high (>70) | medium (56-69) | low (<55) | N/A",
-      "health_effects": "2-3 sentences on health and metabolic impact",
-      "how_processed": "brief description of how the body processes it"
-    }
-  ],
-  "overall_sugar_load": "low | moderate | high",
-  "summary": "1-2 sentence overall assessment"
-}
-If no ingredient label is visible, set ingredients_found to false and sugar_alternatives to [].`;
-
     try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      const resp = await fetch('/.netlify/functions/analyze', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-5',
-          max_tokens: 1500,
-          system,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: capturedB64 } },
-              { type: 'text', text: 'Analyze this ingredient label for all sugar alternatives and sweeteners.' }
-            ]
-          }]
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageData: capturedB64, mediaType: capturedMediaType })
       });
 
-      const data = await resp.json();
-      if (data.error) throw new Error(data.error.message);
-      const raw = (data.content || []).map(i => i.text || '').join('');
-      const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      const parsed = await resp.json();
+      if (parsed.error) throw new Error(parsed.error);
       renderResults(parsed);
     } catch (e) {
       document.getElementById('results').innerHTML = `
         <div class="result-card">
-          <p class="summary-text" style="color:var(--red-dark);">
-            Error: ${e.message || 'Could not analyze the image. Please check your API key and try again.'}
-          </p>
+          <p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p>
+          <p class="error-detail">${e.message || 'Unknown error'}</p>
         </div>`;
     }
 
     document.getElementById('loader').style.display = 'none';
-    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Scan another</button>`);
+    setControls(`
+      <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Scan another</button>
+      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
+    `);
   }
 
   function giClass(cat) {
@@ -542,9 +308,8 @@ If no ingredient label is visible, set ingredients_found to false and sugar_alte
 
   function renderResults(data) {
     const el = document.getElementById('results');
-
     if (!data.ingredients_found) {
-      el.innerHTML = `<div class="result-card"><p class="no-sugar"><i class="ti ti-alert-circle" style="font-size:24px;display:block;margin:0 auto 8px;"></i>No ingredient label detected. Please take a clearer photo of the label.</p></div>`;
+      el.innerHTML = `<div class="result-card"><p class="no-sugar"><i class="ti ti-alert-circle" style="font-size:24px;display:block;margin:0 auto 8px;"></i>No ingredient label detected. Please try a clearer photo.</p></div>`;
       return;
     }
 
