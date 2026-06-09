@@ -74,7 +74,7 @@ exports.handler = async function(event, context) {
       body: JSON.stringify(parsed)
     };
 
-  } catch (e) {
+  } catch(e) {
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
