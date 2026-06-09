@@ -7,113 +7,83 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.9.0/dist/tabler-icons.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #f9f9f7;
-      --surface: #ffffff;
-      --border: rgba(0,0,0,0.12);
-      --border-md: rgba(0,0,0,0.22);
-      --text-primary: #1a1a18;
-      --text-secondary: #5f5e5a;
-      --teal: #1D9E75;
-      --teal-dark: #0F6E56;
-      --red: #E24B4A;
-      --red-dark: #A32D2D;
-      --red-light: #FCEBEB;
-      --amber-light: #FAEEDA;
-      --amber-text: #633806;
-      --green-light: #EAF3DE;
-      --green-text: #3B6D11;
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --bg: #f9f9f7; --surface: #ffffff; --border: rgba(0,0,0,0.12); --border-md: rgba(0,0,0,0.22);
+      --text-primary: #1a1a18; --text-secondary: #5f5e5a; --teal: #1D9E75; --teal-dark: #0F6E56;
+      --teal-light: #E1F5EE; --red: #E24B4A; --red-dark: #A32D2D; --red-light: #FCEBEB;
+      --amber-light: #FAEEDA; --amber-text: #633806; --green-light: #EAF3DE; --green-text: #3B6D11;
+      --radius-md: 8px; --radius-lg: 12px;
     }
-
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1c1c1a;
-        --surface: #252523;
-        --border: rgba(255,255,255,0.10);
-        --border-md: rgba(255,255,255,0.20);
-        --text-primary: #f0ede8;
-        --text-secondary: #a0a09a;
-        --red-light: #501313;
-        --amber-light: #412402;
-        --amber-text: #FAC775;
-        --green-light: #173404;
-        --green-text: #C0DD97;
-      }
+      :root { --bg: #1c1c1a; --surface: #252523; --border: rgba(255,255,255,0.10); --border-md: rgba(255,255,255,0.20);
+        --text-primary: #f0ede8; --text-secondary: #a0a09a; --teal-light: #04342C; --red-light: #501313;
+        --amber-light: #412402; --amber-text: #FAC775; --green-light: #173404; --green-text: #C0DD97; }
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem 4rem;
-    }
-
-    header { text-align: center; margin-bottom: 2rem; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg);
+      color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; padding: 2rem 1rem 4rem; }
+    header { text-align: center; margin-bottom: 1.5rem; }
     header h1 { font-size: 22px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
     header p { font-size: 14px; color: var(--text-secondary); margin-top: 6px; }
-
     #app { width: 100%; max-width: 560px; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-
-    .camera-frame {
-      width: 100%; border-radius: var(--radius-lg); border: 0.5px solid var(--border);
-      background: var(--surface); overflow: hidden; min-height: 260px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    #placeholder {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 10px; padding: 3rem; color: var(--text-secondary); font-size: 14px;
-      width: 100%; min-height: 260px; border: 1.5px dashed var(--border-md);
-      border-radius: var(--radius-lg);
-    }
+    .scan-counter { width: 100%; background: var(--teal-light); border: 0.5px solid var(--teal);
+      border-radius: var(--radius-md); padding: 10px 16px; display: flex; align-items: center;
+      justify-content: space-between; font-size: 13px; }
+    .scan-counter .scans-left { color: var(--teal-dark); font-weight: 500; }
+    .scan-counter .scans-label { color: var(--text-secondary); }
+    .paywall { width: 100%; background: var(--surface); border: 1.5px solid var(--teal);
+      border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; display: none; }
+    .paywall h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .paywall p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem; }
+    .paywall-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .plan-card { flex: 1; min-width: 140px; max-width: 200px; border: 1.5px solid var(--border-md);
+      border-radius: var(--radius-lg); padding: 1rem; cursor: pointer; transition: border-color 0.15s, transform 0.1s;
+      background: var(--bg); }
+    .plan-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+    .plan-card.featured { border-color: var(--teal); background: var(--teal-light); }
+    .plan-card .plan-price { font-size: 22px; font-weight: 700; color: var(--teal); }
+    .plan-card .plan-period { font-size: 11px; color: var(--text-secondary); }
+    .plan-card .plan-name { font-size: 13px; font-weight: 500; margin-top: 6px; }
+    .plan-card .plan-desc { font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+    .plan-badge { font-size: 10px; background: var(--teal); color: white; padding: 2px 8px;
+      border-radius: 999px; display: inline-block; margin-bottom: 6px; }
+    .paywall-footer { margin-top: 1rem; font-size: 12px; color: var(--text-secondary); }
+    .paywall-footer a { color: var(--teal); text-decoration: none; }
+    .camera-frame { width: 100%; border-radius: var(--radius-lg); border: 0.5px solid var(--border);
+      background: var(--surface); overflow: hidden; min-height: 260px; display: flex;
+      align-items: center; justify-content: center; }
+    #placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; padding: 3rem; color: var(--text-secondary); font-size: 14px; width: 100%;
+      min-height: 260px; border: 1.5px dashed var(--border-md); border-radius: var(--radius-lg); }
     #placeholder i { font-size: 40px; }
-
     #video { width: 100%; display: none; border-radius: var(--radius-lg); }
     #canvas { display: none; }
     #preview { width: 100%; border-radius: var(--radius-lg); display: none; }
     #fileInput { display: none; }
-
     #status { font-size: 13px; color: var(--text-secondary); text-align: center; min-height: 18px; }
-
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-
-    .btn {
-      padding: 10px 20px; border-radius: var(--radius-md); border: 0.5px solid var(--border-md);
+    .btn { padding: 10px 20px; border-radius: var(--radius-md); border: 0.5px solid var(--border-md);
       background: var(--surface); color: var(--text-primary); font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: background 0.15s, transform 0.1s;
-      font-family: inherit;
-    }
+      display: flex; align-items: center; gap: 6px; transition: background 0.15s, transform 0.1s; font-family: inherit; }
     .btn:hover { background: var(--bg); }
     .btn:active { transform: scale(0.97); }
     .btn-primary { background: var(--teal); color: #fff; border-color: var(--teal); }
     .btn-primary:hover { background: var(--teal-dark); }
-
-    .divider { display: flex; align-items: center; gap: 10px; width: 100%; color: var(--text-secondary); font-size: 12px; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
     #loader { display: none; flex-direction: column; align-items: center; gap: 12px; padding: 2rem; }
-    .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border); border-top-color: var(--teal);
+      border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     #results { width: 100%; }
-
-    .result-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-    .result-header { font-size: 15px; font-weight: 500; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
+    .result-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem; margin-bottom: 1rem; }
+    .result-header { font-size: 15px; font-weight: 500; margin-bottom: 0.75rem; display: flex;
+      align-items: center; gap: 8px; flex-wrap: wrap; }
     .badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; font-weight: 400; }
     .badge-danger { background: var(--red-light); color: var(--red-dark); }
     .badge-success { background: var(--green-light); color: var(--green-text); }
-
     .summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-
-    .sugar-item { border-left: 2.5px solid var(--red); padding: 0.75rem 1rem; margin-bottom: 0.75rem; background: var(--bg); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+    .sugar-item { border-left: 2.5px solid var(--red); padding: 0.75rem 1rem; margin-bottom: 0.75rem;
+      background: var(--bg); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
     .sugar-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .sugar-aka { font-weight: 400; color: var(--text-secondary); font-size: 12px; }
     .sugar-gi { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-right: 6px; margin-bottom: 4px; }
@@ -129,13 +99,37 @@
   </style>
 </head>
 <body>
-
 <header>
   <h1><i class="ti ti-leaf"></i> Sugar Scanner</h1>
   <p>Scan any ingredient label to reveal hidden sugars</p>
 </header>
-
 <div id="app">
+  <div class="scan-counter" id="scanCounter">
+    <span class="scans-left" id="scansLeftText">3 free scans remaining</span>
+    <span class="scans-label">No account needed</span>
+  </div>
+  <div class="paywall" id="paywall">
+    <h2>You've used your 3 free scans 🌿</h2>
+    <p>Subscribe to keep scanning unlimited ingredient labels — or get Sugar Scanner branded for your own audience.</p>
+    <div class="paywall-options">
+      <div class="plan-card" onclick="handleSubscribe('personal')">
+        <div class="plan-price">$5</div>
+        <div class="plan-period">/month</div>
+        <div class="plan-name">Personal</div>
+        <div class="plan-desc">Unlimited scans for yourself</div>
+      </div>
+      <div class="plan-card featured" onclick="handleSubscribe('family')">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-price">$10</div>
+        <div class="plan-period">/month</div>
+        <div class="plan-name">Family</div>
+        <div class="plan-desc">Unlimited scans for the whole family</div>
+      </div>
+    </div>
+    <div class="paywall-footer">
+      Are you a nutrition coach or health brand? <a href="mailto:heather@sugarscannerapp.com">Get your own branded version →</a>
+    </div>
+  </div>
   <div class="camera-frame" id="cameraFrame">
     <div id="placeholder">
       <i class="ti ti-camera"></i>
@@ -145,38 +139,56 @@
     <canvas id="canvas"></canvas>
     <img id="preview" alt="Captured ingredient label" />
   </div>
-
   <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)" />
-
   <div id="status"></div>
-
   <div class="btn-row" id="controls">
-    <button class="btn btn-primary" onclick="startCamera()">
-      <i class="ti ti-camera"></i> Take photo
-    </button>
-    <button class="btn" onclick="document.getElementById('fileInput').click()">
-      <i class="ti ti-upload"></i> Upload image
-    </button>
+    <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
+    <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
   </div>
-
   <div id="loader">
     <div class="spinner"></div>
     <span style="font-size:14px; color:var(--text-secondary);">Analyzing ingredients…</span>
   </div>
-
   <div id="results"></div>
   <p class="powered-by">Powered by Sugar Scanner AI</p>
 </div>
-
 <script>
-  let stream = null;
-  let capturedB64 = null;
-  let capturedMediaType = 'image/jpeg';
+  const MAX_FREE_SCANS = 3;
+  const STORAGE_KEY = 'sugar_scanner_scans';
+  let stream = null, capturedB64 = null, capturedMediaType = 'image/jpeg';
+
+  function getScansUsed() { try { return parseInt(localStorage.getItem(STORAGE_KEY) || '0'); } catch(e) { return 0; } }
+  function incrementScans() { try { localStorage.setItem(STORAGE_KEY, getScansUsed() + 1); } catch(e) {} }
+  function getScansLeft() { return Math.max(0, MAX_FREE_SCANS - getScansUsed()); }
+
+  function updateCounter() {
+    const left = getScansLeft();
+    const counterEl = document.getElementById('scanCounter');
+    const textEl = document.getElementById('scansLeftText');
+    if (left === 0) {
+      counterEl.style.background = 'var(--red-light)'; counterEl.style.borderColor = 'var(--red)';
+      textEl.style.color = 'var(--red-dark)'; textEl.textContent = 'No free scans remaining';
+      showPaywall();
+    } else { textEl.textContent = `${left} free scan${left !== 1 ? 's' : ''} remaining`; }
+  }
+
+  function showPaywall() {
+    document.getElementById('paywall').style.display = 'block';
+    document.getElementById('cameraFrame').style.opacity = '0.4';
+    document.getElementById('cameraFrame').style.pointerEvents = 'none';
+    document.getElementById('controls').style.opacity = '0.4';
+    document.getElementById('controls').style.pointerEvents = 'none';
+  }
+
+  function handleSubscribe(plan) {
+    alert('Subscription coming soon! Email heather@sugarscannerapp.com to get set up.');
+  }
 
   function setStatus(msg) { document.getElementById('status').textContent = msg; }
   function setControls(html) { document.getElementById('controls').innerHTML = html; }
 
   async function startCamera() {
+    if (getScansLeft() === 0) { showPaywall(); return; }
     try {
       stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
       const video = document.getElementById('video');
@@ -185,13 +197,9 @@
       document.getElementById('preview').style.display = 'none';
       video.style.display = 'block';
       setStatus('Frame the ingredient list clearly, then take a photo');
-      setControls(`
-        <button class="btn btn-primary" onclick="capture()"><i class="ti ti-camera"></i> Take photo</button>
-        <button class="btn" onclick="stopCamera()"><i class="ti ti-x"></i> Cancel</button>
-      `);
-    } catch (e) {
-      setStatus('Camera access denied — try uploading an image instead.');
-    }
+      setControls(`<button class="btn btn-primary" onclick="capture()"><i class="ti ti-camera"></i> Take photo</button>
+        <button class="btn" onclick="stopCamera()"><i class="ti ti-x"></i> Cancel</button>`);
+    } catch(e) { setStatus('Camera access denied — try uploading an image instead.'); }
   }
 
   function stopCamera() {
@@ -199,17 +207,13 @@
     document.getElementById('video').style.display = 'none';
     document.getElementById('placeholder').style.display = 'flex';
     setStatus('');
-    setControls(`
-      <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
-      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
-    `);
+    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
+      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>`);
   }
 
   function capture() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    const video = document.getElementById('video'), canvas = document.getElementById('canvas');
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
     capturedB64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
     capturedMediaType = 'image/jpeg';
@@ -219,77 +223,61 @@
     preview.style.display = 'block';
     document.getElementById('video').style.display = 'none';
     setStatus('Photo captured — tap Scan to analyze');
-    setControls(`
-      <button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
-      <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Retake</button>
-    `);
+    setControls(`<button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
+      <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Retake</button>`);
   }
 
   function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    if (getScansLeft() === 0) { showPaywall(); return; }
+    const file = event.target.files[0]; if (!file) return;
     capturedMediaType = file.type || 'image/jpeg';
     const reader = new FileReader();
     reader.onload = function(e) {
-      const dataUrl = e.target.result;
-      capturedB64 = dataUrl.split(',')[1];
+      const dataUrl = e.target.result; capturedB64 = dataUrl.split(',')[1];
       const preview = document.getElementById('preview');
-      preview.src = dataUrl;
-      preview.style.display = 'block';
+      preview.src = dataUrl; preview.style.display = 'block';
       document.getElementById('placeholder').style.display = 'none';
       document.getElementById('video').style.display = 'none';
       setStatus('Image loaded — tap Scan to analyze');
-      setControls(`
-        <button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
-        <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Choose different image</button>
-      `);
+      setControls(`<button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
+        <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Choose different image</button>`);
     };
-    reader.readAsDataURL(file);
-    event.target.value = '';
+    reader.readAsDataURL(file); event.target.value = '';
   }
 
   function retake() {
     document.getElementById('preview').style.display = 'none';
     document.getElementById('placeholder').style.display = 'flex';
-    document.getElementById('results').innerHTML = '';
-    capturedB64 = null;
+    document.getElementById('results').innerHTML = ''; capturedB64 = null;
     setStatus('');
-    setControls(`
-      <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
-      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
-    `);
+    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
+      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>`);
   }
 
   async function analyzeImage() {
+    if (getScansLeft() === 0) { showPaywall(); return; }
     if (!capturedB64) return;
     document.getElementById('loader').style.display = 'flex';
     document.getElementById('results').innerHTML = '';
-    setControls('');
-    setStatus('');
-
+    setControls(''); setStatus('');
     try {
       const resp = await fetch('/.netlify/functions/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ imageData: capturedB64, mediaType: capturedMediaType })
       });
-
       const parsed = await resp.json();
       if (parsed.error) throw new Error(parsed.error);
-      renderResults(parsed);
-    } catch (e) {
-      document.getElementById('results').innerHTML = `
-        <div class="result-card">
-          <p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p>
-          <p class="error-detail">${e.message || 'Unknown error'}</p>
-        </div>`;
+      incrementScans(); updateCounter(); renderResults(parsed);
+    } catch(e) {
+      document.getElementById('results').innerHTML = `<div class="result-card">
+        <p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p>
+        <p class="error-detail">${e.message || 'Unknown error'}</p></div>`;
     }
-
     document.getElementById('loader').style.display = 'none';
-    setControls(`
-      <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Scan another</button>
-      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
-    `);
+    if (getScansLeft() > 0) {
+      setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Scan another</button>
+        <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>`);
+    }
   }
 
   function giClass(cat) {
@@ -312,39 +300,28 @@
       el.innerHTML = `<div class="result-card"><p class="no-sugar"><i class="ti ti-alert-circle" style="font-size:24px;display:block;margin:0 auto 8px;"></i>No ingredient label detected. Please try a clearer photo.</p></div>`;
       return;
     }
-
     const items = data.sugar_alternatives || [];
     const lc = loadColor(data.overall_sugar_load);
-
-    let html = `<div class="result-card">
-      <div class="result-header">
-        <i class="ti ti-report-search" style="font-size:18px;"></i>
-        <span>Scan results</span>
-        <span class="badge ${items.length > 0 ? 'badge-danger' : 'badge-success'}">${items.length} sugar${items.length !== 1 ? 's' : ''} found</span>
-        <span class="badge" style="margin-left:auto;background:${lc.bg};color:${lc.text};">${data.overall_sugar_load || ''} sugar load</span>
-      </div>
-      <p class="summary-text">${data.summary || ''}</p>
-    </div>`;
-
+    let html = `<div class="result-card"><div class="result-header">
+      <i class="ti ti-report-search" style="font-size:18px;"></i><span>Scan results</span>
+      <span class="badge ${items.length > 0 ? 'badge-danger' : 'badge-success'}">${items.length} sugar${items.length !== 1 ? 's' : ''} found</span>
+      <span class="badge" style="margin-left:auto;background:${lc.bg};color:${lc.text};">${data.overall_sugar_load || ''} sugar load</span>
+      </div><p class="summary-text">${data.summary || ''}</p></div>`;
     if (items.length === 0) {
-      html += `<div class="no-sugar"><i class="ti ti-circle-check" style="font-size:28px;color:var(--teal);display:block;margin:0 auto 8px;"></i>No sugar alternatives detected in this label.</div>`;
+      html += `<div class="no-sugar"><i class="ti ti-circle-check" style="font-size:28px;color:var(--teal);display:block;margin:0 auto 8px;"></i>No sugar alternatives detected.</div>`;
     } else {
       items.forEach(s => {
-        html += `<div class="sugar-item">
-          <div class="sugar-name">${s.name} <span class="sugar-aka">— ${s.common_name || ''}</span></div>
-          <div style="margin:6px 0;">
-            <span class="sugar-gi ${giClass(s.gi_category)}">GI: ${s.gi_index || 'N/A'}</span>
-            <span class="sugar-type">${s.type || ''}</span>
-          </div>
+        html += `<div class="sugar-item"><div class="sugar-name">${s.name} <span class="sugar-aka">— ${s.common_name || ''}</span></div>
+          <div style="margin:6px 0;"><span class="sugar-gi ${giClass(s.gi_category)}">GI: ${s.gi_index || 'N/A'}</span>
+          <span class="sugar-type">${s.type || ''}</span></div>
           <div class="sugar-detail"><strong>Health effects:</strong> ${s.health_effects || ''}</div>
-          <div class="sugar-detail"><strong>How it's processed:</strong> ${s.how_processed || ''}</div>
-        </div>`;
+          <div class="sugar-detail"><strong>How it's processed:</strong> ${s.how_processed || ''}</div></div>`;
       });
     }
-
     el.innerHTML = html;
   }
-</script>
 
+  updateCounter();
+</script>
 </body>
 </html>
