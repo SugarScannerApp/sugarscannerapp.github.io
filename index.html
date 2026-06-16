@@ -208,13 +208,15 @@
 
   function showPaywall() {
     document.getElementById('paywall').style.display = 'block';
+    if (typeof gtag === 'function') { gtag('event', 'paywall_shown'); }
     document.getElementById('cameraFrame').style.opacity = '0.4';
     document.getElementById('cameraFrame').style.pointerEvents = 'none';
     document.getElementById('controls').style.opacity = '0.4';
     document.getElementById('controls').style.pointerEvents = 'none';
   }
 
-  async function subscribe(plan, cardEl) {
+async function subscribe(plan, cardEl) {
+    if (typeof gtag === 'function') { gtag('event', 'subscribe_clicked', { plan: plan }); }
     const loadingEl = document.getElementById(plan + 'Loading');
     if (loadingEl) loadingEl.style.display = 'block';
     cardEl.style.pointerEvents = 'none';
@@ -331,7 +333,8 @@
       const parsed = await resp.json();
       if (parsed.error) throw new Error(parsed.error);
       if (!isSubscribed()) { incrementScans(); updateCounter(); }
-      renderResults(parsed);
+renderResults(parsed);
+if (typeof gtag === 'function') { gtag('event', 'scan_completed'); }
     } catch(e) {
       document.getElementById('results').innerHTML = `<div class="result-card">
         <p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p>
