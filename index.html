@@ -1,402 +1,2404 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
-  <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-03EVSYN1FT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-03EVSYN1FT');
-  </script>
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sugar Scanner</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.9.0/dist/tabler-icons.min.css" />
+  <title>Insurance Recruiting CRM</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #f9f9f7; --surface: #ffffff; --border: rgba(0,0,0,0.12); --border-md: rgba(0,0,0,0.22);
-      --text-primary: #1a1a18; --text-secondary: #5f5e5a; --teal: #1D9E75; --teal-dark: #0F6E56;
-      --teal-light: #E1F5EE; --red: #E24B4A; --red-dark: #A32D2D; --red-light: #FCEBEB;
-      --amber-light: #FAEEDA; --amber-text: #633806; --green-light: #EAF3DE; --green-text: #3B6D11;
-      --radius-md: 8px; --radius-lg: 12px;
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.12);
+      --border-strong: rgba(0,0,0,0.22);
+      --text: #1a1a18;
+      --text-2: #5F5E5A;
+      --text-3: #888780;
+      --blue: #185FA5;
+      --blue-bg: #E6F1FB;
+      --blue-text: #0C447C;
+      --green: #3B6D11;
+      --green-bg: #EAF3DE;
+      --green-text: #27500A;
+      --amber-bg: #FAEEDA;
+      --amber-text: #633806;
+      --red-bg: #FCEBEB;
+      --red-text: #791F1F;
+      --purple-bg: #EEEDFE;
+      --purple-text: #3C3489;
     }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #1c1c1a; --surface: #252523; --border: rgba(255,255,255,0.10);
-        --border-md: rgba(255,255,255,0.20); --text-primary: #f0ede8; --text-secondary: #a0a09a;
-        --teal-light: #04342C; --red-light: #501313; --amber-light: #412402;
-        --amber-text: #FAC775; --green-light: #173404; --green-text: #C0DD97; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg); color: var(--text-primary); min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem 4rem; }
-    header { text-align: center; margin-bottom: 1.5rem; }
-    header h1 { font-size: 22px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    header p { font-size: 14px; color: var(--text-secondary); margin-top: 6px; }
-    #app { width: 100%; max-width: 560px; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-    .success-banner { width: 100%; background: var(--green-light); border: 0.5px solid var(--green-text);
-      border-radius: var(--radius-md); padding: 12px 16px; text-align: center;
-      font-size: 14px; color: var(--green-text); font-weight: 500; display: none; }
-    .scan-counter { width: 100%; background: var(--teal-light); border: 0.5px solid var(--teal);
-      border-radius: var(--radius-md); padding: 10px 16px; display: flex;
-      align-items: center; justify-content: space-between; font-size: 13px; }
-    .scan-counter .scans-left { color: var(--teal-dark); font-weight: 500; }
-    .scan-counter .scans-label { color: var(--text-secondary); }
-    .paywall { width: 100%; background: var(--surface); border: 1.5px solid var(--teal);
-      border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; display: none; }
-    .paywall h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-    .paywall p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem; }
-    .paywall-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
-    .plan-card { flex: 1; min-width: 140px; max-width: 180px; border: 1.5px solid var(--border-md);
-      border-radius: var(--radius-lg); padding: 1rem; cursor: pointer;
-      transition: border-color 0.15s, transform 0.1s; background: var(--bg); }
-    .plan-card:hover { border-color: var(--teal); transform: translateY(-2px); }
-    .plan-card.featured { border-color: var(--teal); background: var(--teal-light); }
-    .plan-card .plan-price { font-size: 22px; font-weight: 700; color: var(--teal); }
-    .plan-card .plan-period { font-size: 11px; color: var(--text-secondary); }
-    .plan-card .plan-name { font-size: 13px; font-weight: 500; margin-top: 6px; }
-    .plan-card .plan-desc { font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
-    .plan-badge { font-size: 10px; background: var(--teal); color: white; padding: 2px 8px;
-      border-radius: 999px; display: inline-block; margin-bottom: 6px; }
-    .plan-card .plan-loading { font-size: 12px; color: var(--text-secondary); margin-top: 6px; display: none; }
-    .paywall-footer { font-size: 12px; color: var(--text-secondary); margin-top: 0.5rem; }
-    .paywall-footer a { color: var(--teal); text-decoration: none; }
-    .camera-frame { width: 100%; border-radius: var(--radius-lg); border: 0.5px solid var(--border);
-      background: var(--surface); overflow: hidden; min-height: 260px;
-      display: flex; align-items: center; justify-content: center; }
-    #placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 10px; padding: 3rem; color: var(--text-secondary); font-size: 14px;
-      width: 100%; min-height: 260px; border: 1.5px dashed var(--border-md); border-radius: var(--radius-lg); }
-    #placeholder i { font-size: 40px; }
-    #video { width: 100%; display: none; border-radius: var(--radius-lg); }
-    #canvas { display: none; }
-    #preview { width: 100%; border-radius: var(--radius-lg); display: none; }
-    #fileInput { display: none; }
-    #status { font-size: 13px; color: var(--text-secondary); text-align: center; min-height: 18px; }
-    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-    .btn { padding: 10px 20px; border-radius: var(--radius-md); border: 0.5px solid var(--border-md);
-      background: var(--surface); color: var(--text-primary); font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+
+    /* ── Layout ── */
+    .app { display: flex; height: 100vh; overflow: hidden; }
+
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0;
+    }
+
+    .sidebar-logo {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      padding: 0 1.25rem 1.25rem;
+      border-bottom: 0.5px solid var(--border);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 1.25rem;
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      border-radius: 0;
+      transition: background 0.1s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover { background: var(--bg); }
+    .nav-item.active { color: var(--blue); background: var(--blue-bg); font-weight: 500; }
+    .nav-item i { font-size: 16px; }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-title { font-size: 18px; font-weight: 500; }
+    .page-sub { font-size: 13px; color: var(--text-3); margin-top: 2px; }
+
+    /* ── Forms ── */
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+
+    label { font-size: 12px; color: var(--text-3); }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      padding: 7px 10px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--surface);
+      font-family: inherit;
+    }
+
+    select { height: 34px; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888780' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center; padding-right: 26px; }
+
+    input[type="text"] { height: 34px; }
+    textarea { height: 80px; resize: vertical; }
+
+    select:focus, input:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue-bg); }
+
+    /* ── Coverage picker ── */
+    .cov-search { margin-bottom: 8px; }
+
+    .cov-tree {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 0.5px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .cov-cat-label { font-size: 11px; font-weight: 500; color: var(--text-3); margin: 6px 0 4px; }
+    .cov-options { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+
+    .cov-pill {
+      font-size: 11px; padding: 3px 8px; border-radius: 6px;
+      border: 0.5px solid var(--border-strong); background: var(--surface);
+      color: var(--text-2); cursor: pointer;
+    }
+    .cov-pill.active { border-color: var(--blue); background: var(--blue-bg); color: var(--blue-text); }
+
+    .selected-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; min-height: 0; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: var(--blue-bg); color: var(--blue-text);
+      font-size: 11px; padding: 3px 6px 3px 8px; border-radius: 6px;
+    }
+    .tag i { font-size: 11px; cursor: pointer; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; font-size: 13px; font-weight: 500;
+      border: 0.5px solid var(--border-strong); border-radius: 8px;
+      background: var(--surface); color: var(--text);
+      cursor: pointer; transition: background 0.1s, transform 0.1s;
+      font-family: inherit;
+    }
     .btn:hover { background: var(--bg); }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary { background: var(--teal); color: #fff; border-color: var(--teal); }
-    .btn-primary:hover { background: var(--teal-dark); }
-    #loader { display: none; flex-direction: column; align-items: center; gap: 12px; padding: 2rem; }
-    .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border);
-      border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #results { width: 100%; }
-    .result-card { background: var(--surface); border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-    .result-header { font-size: 15px; font-weight: 500; margin-bottom: 0.75rem;
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; font-weight: 400; }
-    .badge-danger { background: var(--red-light); color: var(--red-dark); }
-    .badge-success { background: var(--green-light); color: var(--green-text); }
-    .summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-    .sugar-item { border-left: 2.5px solid var(--red); padding: 0.75rem 1rem; margin-bottom: 0.75rem;
-      background: var(--bg); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
-    .sugar-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .sugar-aka { font-weight: 400; color: var(--text-secondary); font-size: 12px; }
-    .sugar-gi { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-right: 6px; margin-bottom: 4px; }
-    .gi-high { background: var(--red-light); color: var(--red-dark); }
-    .gi-medium { background: var(--amber-light); color: var(--amber-text); }
-    .gi-low { background: var(--green-light); color: var(--green-text); }
-    .sugar-type { font-size: 12px; color: var(--text-secondary); }
-    .sugar-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-top: 4px; }
-    .sugar-detail strong { font-weight: 500; color: var(--text-primary); }
-    .no-sugar { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 14px; }
-    .powered-by { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 1rem; opacity: 0.6; }
-    .error-detail { font-size: 11px; color: var(--text-secondary); margin-top: 6px; font-family: monospace; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+    .btn-primary:hover { background: #333; }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-ghost { border-color: transparent; }
+    .btn-ghost:hover { background: var(--bg); border-color: var(--border); }
+
+    /* ── Results grid ── */
+    .results-header {
+      font-size: 13px; color: var(--text-3); margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .agency-grid { display: flex; flex-direction: column; gap: 10px; }
+
+    .agency-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+
+    .agency-card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px; margin-bottom: 8px;
+    }
+
+    .agency-identity { display: flex; align-items: center; gap: 10px; }
+
+    .agency-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--bg); display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; font-size: 18px; color: var(--text-3);
+    }
+
+    .agency-name { font-weight: 500; font-size: 14px; }
+    .agency-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+    .agency-desc { font-size: 13px; color: var(--text-2); margin-bottom: 8px; line-height: 1.5; }
+
+    .agency-tags { margin-bottom: 8px; }
+    .agency-tag {
+      display: inline-block; background: var(--bg); color: var(--text-2);
+      font-size: 11px; padding: 2px 8px; border-radius: 6px; margin: 0 4px 4px 0;
+    }
+
+    .agency-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+    .status-badge {
+      font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 500;
+    }
+    .status-prospect { background: var(--amber-bg); color: var(--amber-text); }
+    .status-active { background: var(--green-bg); color: var(--green-text); }
+    .status-saved { background: var(--blue-bg); color: var(--blue-text); }
+    .status-placed { background: var(--purple-bg); color: var(--purple-text); }
+
+    /* ── Saved agencies table ── */
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left; font-size: 11px; font-weight: 500;
+      color: var(--text-3); padding: 8px 12px;
+      border-bottom: 0.5px solid var(--border);
+    }
+    td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+
+    .link { color: var(--blue); text-decoration: none; font-size: 12px; }
+    .link:hover { text-decoration: underline; }
+
+    /* ── Agency detail modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .modal-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 1.25rem;
+    }
+
+    .modal-title { font-size: 16px; font-weight: 500; }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center; padding: 3rem 1rem;
+      color: var(--text-3); font-size: 14px;
+    }
+    .empty i { font-size: 32px; display: block; margin-bottom: 0.75rem; opacity: 0.4; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      background: var(--text); color: var(--surface);
+      font-size: 13px; padding: 10px 16px; border-radius: 8px;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 200;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ── Status/loading ── */
+    .status-msg { font-size: 13px; color: var(--text-3); margin: 0.5rem 0; }
+    .error-msg { font-size: 13px; color: #A32D2D; margin: 0.5rem 0; }
+
+    /* ── AMS badges ── */
+    .ams-badge {
+      display: inline-block; background: var(--purple-bg); color: var(--purple-text);
+      font-size: 11px; padding: 2px 8px; border-radius: 6px;
+    }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 1rem 0; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 11px; font-weight: 500; color: var(--text-3);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
-<header>
-  <h1><i class="ti ti-leaf"></i> Sugar Scanner</h1>
-  <p>Identify hidden sugars & other concerning ingredients in any label</p>
-</header>
-<div id="app">
-  <div class="success-banner" id="successBanner">
-    🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!
-  </div>
-  <div class="scan-counter" id="scanCounter">
-    <span class="scans-left" id="scansLeftText">3 free scans remaining</span>
-    <span class="scans-label" id="scanLabel">No account needed</span>
-  </div>
- <div class="paywall" id="paywall">
-    <h2>You've already started uncovering what's really in your food</h2>
-    <p>Keep protecting your health with unlimited scans.</p>
-    <p style="text-align:left; max-width:380px; margin:0 auto 1.25rem;">
-      ✓ Hidden sugar names<br>
-      ✓ Glycemic index information<br>
-      ✓ Blood sugar impact explanations<br>
-      ✓ Artificial sweetener warnings<br>
-      ✓ Ingredient health insights
-    </p>
-    <div class="paywall-options">
-      <div class="plan-card" id="personalCard" onclick="subscribe('personal', this)">
-        <div class="plan-price">$4.99</div>
-        <div class="plan-period">/month</div>
-        <div class="plan-name">Personal</div>
-        <div class="plan-desc">Unlimited scans for yourself</div>
-        <div class="plan-loading" id="personalLoading">Loading...</div>
+<div class="app">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <i class="ti ti-building-skyscraper" style="font-size:18px;color:#185FA5"></i>
+      InsureRecruit CRM
+    </div>
+    <button class="nav-item active" onclick="showPage('discover')" id="nav-discover">
+      <i class="ti ti-search"></i> Discover agencies
+    </button>
+    <button class="nav-item" onclick="showPage('saved')" id="nav-saved">
+      <i class="ti ti-bookmark"></i> Saved agencies
+    </button>
+    <button class="nav-item" onclick="showPage('dashboard')" id="nav-dashboard">
+      <i class="ti ti-layout-dashboard"></i> Dashboard
+    </button>
+    <div style="font-size:11px;font-weight:500;color:var(--text-3);padding:12px 1.25rem 4px;text-transform:uppercase;letter-spacing:0.05em;">Recruiting</div>
+    <button class="nav-item" onclick="showPage('contacts')" id="nav-contacts">
+      <i class="ti ti-users"></i> Contacts
+    </button>
+    <button class="nav-item" onclick="showPage('outreach')" id="nav-outreach">
+      <i class="ti ti-phone"></i> Outreach log
+    </button>
+    <button class="nav-item" onclick="showPage('jobs')" id="nav-jobs">
+      <i class="ti ti-briefcase"></i> Job orders
+    </button>
+    <button class="nav-item" onclick="showPage('submissions')" id="nav-submissions">
+      <i class="ti ti-send"></i> Submissions
+    </button>
+    <button class="nav-item" onclick="showPage('candidates')" id="nav-candidates">
+      <i class="ti ti-user-circle"></i> Candidates
+    </button>
+    <button class="nav-item" onclick="showPage('clients')" id="nav-clients">
+      <i class="ti ti-building-community"></i> Clients
+    </button>
+    <div style="font-size:11px;font-weight:500;color:var(--text-3);padding:12px 1.25rem 4px;text-transform:uppercase;letter-spacing:0.05em;">Tools</div>
+    <button class="nav-item" onclick="showPage('import')" id="nav-import">
+      <i class="ti ti-upload"></i> Import data
+    </button>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main" id="main-content">
+
+    <!-- ── DISCOVER PAGE ── -->
+    <div id="page-discover">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Discover agencies</div>
+          <div class="page-sub">Search for insurance brokerages and save them to your pipeline</div>
+        </div>
       </div>
-      <div class="plan-card featured" id="familyCard" onclick="subscribe('family', this)">
-        <div class="plan-badge">Most Popular</div>
-        <div class="plan-price">$9.99</div>
-        <div class="plan-period">/month</div>
-        <div class="plan-name">Family</div>
-        <div class="plan-desc">Unlimited scans for the whole family</div>
-        <div class="plan-loading" id="familyLoading">Loading...</div>
+
+      <div class="card">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="state">State</label>
+            <select id="state">
+              <option value="">Select state...</option>
+              <option value="ALL_STATES">All 50 states (nationwide)</option>
+              <option>Alabama</option>
+              <option>Alaska</option>
+              <option>Arizona</option>
+              <option>Arkansas</option>
+              <option>California</option>
+              <option>Colorado</option>
+              <option>Connecticut</option>
+              <option>Delaware</option>
+              <option>Florida</option>
+              <option>Georgia</option>
+              <option>Hawaii</option>
+              <option>Idaho</option>
+              <option>Illinois</option>
+              <option>Indiana</option>
+              <option>Iowa</option>
+              <option>Kansas</option>
+              <option>Kentucky</option>
+              <option>Louisiana</option>
+              <option>Maine</option>
+              <option>Maryland</option>
+              <option>Massachusetts</option>
+              <option>Michigan</option>
+              <option>Minnesota</option>
+              <option>Mississippi</option>
+              <option>Missouri</option>
+              <option>Montana</option>
+              <option>Nebraska</option>
+              <option>Nevada</option>
+              <option>New Hampshire</option>
+              <option>New Jersey</option>
+              <option>New Mexico</option>
+              <option>New York</option>
+              <option>North Carolina</option>
+              <option>North Dakota</option>
+              <option>Ohio</option>
+              <option>Oklahoma</option>
+              <option>Oregon</option>
+              <option>Pennsylvania</option>
+              <option>Rhode Island</option>
+              <option>South Carolina</option>
+              <option>South Dakota</option>
+              <option>Tennessee</option>
+              <option>Texas</option>
+              <option>Utah</option>
+              <option>Vermont</option>
+              <option>Virginia</option>
+              <option>Washington</option>
+              <option>West Virginia</option>
+              <option>Wisconsin</option>
+              <option>Wyoming</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="agencySize">Agency size</label>
+            <select id="agencySize">
+              <option value="">Any size</option>
+              <option>Large national brokerage</option>
+              <option>Regional / mid-size brokerage</option>
+              <option>Boutique / specialty brokerage</option>
+              <option>Independent local agency</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-3" style="margin-bottom:12px;">
+          <div class="form-group">
+            <label for="commercialSegment">Commercial lines segment</label>
+            <select id="commercialSegment">
+              <option value="">Any</option>
+              <option>Small Business</option>
+              <option>Middle Market</option>
+              <option>Large/National Accounts</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="industry">Industry / specialty</label>
+            <select id="industry">
+              <option value="">Any industry</option>
+              <option>Agriculture / Food Supply</option>
+              <option>Architects, Engineers &amp; Surveyors</option>
+              <option>Automobile Dealers</option>
+              <option>Cannabis</option>
+              <option>Captives</option>
+              <option>Construction</option>
+              <option>Cyber</option>
+              <option>Education (Higher and Secondary)</option>
+              <option>Energy (Oil, Gas, Renewables)</option>
+              <option>Entertainment</option>
+              <option>Environmental</option>
+              <option>Financial Institutions</option>
+              <option>Fine Arts</option>
+              <option>Healthcare</option>
+              <option>HOA (Homeowner Associations)</option>
+              <option>Hospitality / Gaming</option>
+              <option>International</option>
+              <option>M&amp;A</option>
+              <option>Manufacturing</option>
+              <option>Marine</option>
+              <option>Medical Malpractice</option>
+              <option>Non-profit</option>
+              <option>Public Sector / Public Entities</option>
+              <option>Real Estate</option>
+              <option>Pharmaceuticals / Life Science</option>
+              <option>Restaurants</option>
+              <option>Retail</option>
+              <option>Specialty Insurance</option>
+              <option>Technology</option>
+              <option>Transportation / Trucking / Rail</option>
+              <option>Utilities</option>
+              <option>Wholesale &amp; Distribution</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="benefitsSegment">Employee benefits segment</label>
+            <select id="benefitsSegment">
+              <option value="">Any</option>
+              <option>Small Group</option>
+              <option>Large Group</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="personalSegment">Personal lines segment</label>
+            <select id="personalSegment">
+              <option value="">Any</option>
+              <option>Standard</option>
+              <option>High Net Worth</option>
+              <option>Ultra High Net Worth</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom:12px;">
+          <div class="form-group">
+            <label for="personalCarriers">Personal lines carriers</label>
+            <select id="personalCarriers" multiple size="6" style="height:auto;padding:4px;">
+              <option>CSE</option>
+              <option>Encompass</option>
+              <option>Kemper</option>
+              <option>Mercury</option>
+              <option>Nationwide</option>
+              <option>Progressive</option>
+              <option>Safeco</option>
+              <option>The Hartford</option>
+              <option>Travelers</option>
+            </select>
+            <span style="font-size:11px;color:var(--text-3);">Hold Ctrl/Cmd to select multiple</span>
+          </div>
+          <div class="form-group">
+            <label for="hnwCarriers">HNW carriers</label>
+            <select id="hnwCarriers" multiple size="6" style="height:auto;padding:4px;">
+              <option>AIG</option>
+              <option>Chubb</option>
+              <option>Cincinnati</option>
+              <option>NatGen Premier</option>
+              <option>Nationwide Private Client</option>
+              <option>PURE</option>
+            </select>
+            <span style="font-size:11px;color:var(--text-3);">Hold Ctrl/Cmd to select multiple</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label>Coverages needed</label>
+          <div class="selected-tags" id="selectedTags"></div>
+          <input type="text" class="cov-search" id="covSearch" placeholder="Search coverages..." oninput="filterCoverages()" />
+          <div class="cov-tree" id="covTree"></div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="searchBtn" onclick="runSearch()">
+            <i class="ti ti-search"></i> Find agencies
+          </button>
+          <button class="btn" id="hiringBtn" onclick="runHiringSearch()" style="border-color:var(--green);color:var(--green);">
+            <i class="ti ti-briefcase"></i> Who's actively hiring?
+          </button>
+          <div id="searchStatus" class="status-msg"></div>
+        </div>
       </div>
-      <div class="plan-card" id="annualCard" onclick="subscribe('annual', this)">
-        <div class="plan-badge" style="background:#633806;">Save 33%</div>
-        <div class="plan-price">$39.99</div>
-        <div class="plan-period">/year</div>
-        <div class="plan-name">Annual</div>
-        <div class="plan-desc">Best value — one payment for the whole year</div>
-        <div class="plan-loading" id="annualLoading">Loading...</div>
+
+      <div id="searchResults"></div>
+    <div id="hiringResults"></div>
+    </div>
+
+    <!-- ── SAVED PAGE ── -->
+    <div id="page-saved" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Saved agencies</div>
+          <div class="page-sub">Your recruiting pipeline</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+        <div id="savedContent">
+          <div class="empty"><i class="ti ti-bookmark"></i>No saved agencies yet — discover and save some first.</div>
+        </div>
       </div>
     </div>
-    <div class="paywall-footer">
-      Are you a nutrition coach or health brand? <a href="mailto:heather@sugarscannerapp.com">Get your own branded version →</a>
+
+    <!-- ── DASHBOARD PAGE ── -->
+    <div id="page-dashboard" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub">Your recruiting pipeline at a glance</div>
+        </div>
+      </div>
+      <div id="dashboardContent"></div>
+    </div>
+
+    <!-- ── CONTACTS PAGE ── -->
+    <div id="page-contacts" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Contacts</div>
+          <div class="page-sub">Hiring managers and agency contacts</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddContact()"><i class="ti ti-plus"></i> Add contact</button>
+      </div>
+      <div class="card">
+        <div id="contactsContent"><div class="empty"><i class="ti ti-users"></i>No contacts yet.</div></div>
+      </div>
+    </div>
+
+    <!-- ── OUTREACH PAGE ── -->
+    <div id="page-outreach" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Outreach log</div>
+          <div class="page-sub">Track every call, email, and LinkedIn touchpoint</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddOutreach(null)"><i class="ti ti-plus"></i> Log outreach</button>
+      </div>
+      <div class="card">
+        <div id="outreachContent"><div class="empty"><i class="ti ti-phone"></i>No outreach logged yet.</div></div>
+      </div>
+    </div>
+
+    <!-- ── JOB ORDERS PAGE ── -->
+    <div id="page-jobs" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Job orders</div>
+          <div class="page-sub">Open roles at agencies in your pipeline</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddJob(null)"><i class="ti ti-plus"></i> Add job order</button>
+      </div>
+      <div class="card">
+        <div id="jobsContent"><div class="empty"><i class="ti ti-briefcase"></i>No job orders yet.</div></div>
+      </div>
+    </div>
+
+    <!-- ── SUBMISSIONS PAGE ── -->
+    <div id="page-submissions" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Submissions</div>
+          <div class="page-sub">Candidates submitted to agencies</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddSubmission()"><i class="ti ti-plus"></i> Add submission</button>
+      </div>
+      <div class="card">
+        <div id="submissionsContent"><div class="empty"><i class="ti ti-send"></i>No submissions yet.</div></div>
+      </div>
+    </div>
+
+    <!-- ── CANDIDATES PAGE ── -->
+    <div id="page-candidates" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Candidates</div>
+          <div class="page-sub">Your recruiting talent pool</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddCandidate()"><i class="ti ti-plus"></i> Add candidate</button>
+      </div>
+      <div class="card">
+        <div id="candidatesContent"><div class="empty"><i class="ti ti-user-circle"></i>No candidates yet.</div></div>
+      </div>
+    </div>
+
+    <!-- ── CLIENTS PAGE ── -->
+    <div id="page-clients" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Clients</div>
+          <div class="page-sub">Companies you recruit for</div>
+        </div>
+        <button class="btn btn-primary" onclick="openAddClient()"><i class="ti ti-plus"></i> Add client</button>
+      </div>
+      <div class="card">
+        <div id="clientsContent"><div class="empty"><i class="ti ti-building-community"></i>No clients yet — add your first one.</div></div>
+      </div>
+    </div>
+
+    <!-- ── IMPORT PAGE ── -->
+    <div id="page-import" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Import data</div>
+          <div class="page-sub">Bulk import records from Bullhorn or other CSV exports</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group" style="margin-bottom:12px;">
+          <label>What are you importing?</label>
+          <select id="importType" onchange="updateImportMapping()">
+            <option value="agencies">Companies → Agencies</option>
+            <option value="contacts">Contacts</option>
+            <option value="candidates">Candidates</option>
+            <option value="job_orders">Job Orders</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px;">
+          <label>Upload CSV file</label>
+          <input type="file" id="csvFile" accept=".csv" onchange="handleCsvUpload(event)" style="padding:6px;" />
+        </div>
+
+        <div id="importPreview"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Agency detail modal -->
+<div class="modal-overlay" id="agencyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Agency details</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Add Contact Modal -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="contactModalTitle">Add contact</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeContactModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Full name *</label><input type="text" id="cName" placeholder="Jane Smith" /></div>
+      <div class="form-group"><label>Title</label><input type="text" id="cTitle" placeholder="VP of Operations" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Email</label><input type="text" id="cEmail" placeholder="jane@agency.com" /></div>
+      <div class="form-group"><label>Phone</label><input type="text" id="cPhone" placeholder="(555) 000-0000" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>LinkedIn URL</label><input type="text" id="cLinkedin" placeholder="https://linkedin.com/in/..." />
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Agency</label>
+      <select id="cAgency"><option value="">Select agency...</option></select>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Notes</label><textarea id="cNotes" placeholder="Any notes about this contact..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="saveContact()"><i class="ti ti-device-floppy"></i> Save contact</button>
+      <button class="btn" onclick="closeContactModal()">Cancel</button>
     </div>
   </div>
-  <div class="camera-frame" id="cameraFrame">
-    <div id="placeholder">
-      <i class="ti ti-camera"></i>
-      <span>Take a photo or upload an image of an ingredient label</span>
+</div>
+
+<!-- Add Outreach Modal -->
+<div class="modal-overlay" id="outreachModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Log outreach</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOutreachModal()"><i class="ti ti-x"></i></button>
     </div>
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
-    <img id="preview" alt="Captured ingredient label" />
+    <div class="form-row">
+      <div class="form-group">
+        <label>Agency *</label>
+        <select id="oAgency"><option value="">Select agency...</option></select>
+      </div>
+      <div class="form-group">
+        <label>Contact</label>
+        <select id="oContact"><option value="">Select contact...</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type *</label>
+        <select id="oType">
+          <option value="call">Phone call</option>
+          <option value="email">Email</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="meeting">Meeting</option>
+          <option value="text">Text</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="oDate" style="height:34px;" />
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Notes</label>
+      <textarea id="oNotes" placeholder="What was discussed, outcome, next steps..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Follow-up date</label>
+        <input type="date" id="oFollowUp" style="height:34px;" />
+      </div>
+      <div class="form-group" style="justify-content:flex-end;padding-top:20px;">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="oFollowUpDone" /> Follow-up completed
+        </label>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary" onclick="saveOutreach()"><i class="ti ti-device-floppy"></i> Save</button>
+      <button class="btn" onclick="closeOutreachModal()">Cancel</button>
+    </div>
   </div>
-  <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)" />
-  <div id="status"></div>
-  <div class="btn-row" id="controls">
-    <button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
-    <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>
+</div>
+
+<!-- Add Job Order Modal -->
+<div class="modal-overlay" id="jobModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add job order</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeJobModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Agency *</label>
+      <select id="jAgency"><option value="">Select agency...</option></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Job title *</label><input type="text" id="jTitle" placeholder="Commercial Lines Account Manager" /></div>
+      <div class="form-group">
+        <label>Department</label>
+        <select id="jDept">
+          <option value="">Select...</option>
+          <option>Commercial Lines</option>
+          <option>Personal Lines</option>
+          <option>Employee Benefits</option>
+          <option>Life & Health</option>
+          <option>Risk Management</option>
+          <option>Surety/Bond</option>
+          <option>Claims</option>
+          <option>Cyber & Professional Liability</option>
+          <option>Specialty Programs</option>
+          <option>Private Client / High-Net-Worth</option>
+          <option>Management/Leadership</option>
+          <option>Operations</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Status</label>
+        <select id="jStatus">
+          <option value="open">Open</option>
+          <option value="filled">Filled</option>
+          <option value="on-hold">On hold</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Salary range</label><input type="text" id="jSalary" placeholder="$60k - $80k" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Job description</label>
+      <textarea id="jDescription" style="height:150px;" placeholder="Paste the full job description here — responsibilities, requirements, qualifications, compensation details..."></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Internal notes</label>
+      <textarea id="jNotes" placeholder="Hiring manager feedback, interview process, internal details..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="saveJob()"><i class="ti ti-device-floppy"></i> Save job order</button>
+      <button class="btn" onclick="closeJobModal()">Cancel</button>
+    </div>
   </div>
-  <div id="loader">
-    <div class="spinner"></div>
-    <span style="font-size:14px; color:var(--text-secondary);">Analyzing ingredients…</span>
+</div>
+
+<!-- Add Submission Modal -->
+<div class="modal-overlay" id="submissionModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add submission</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeSubmissionModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Agency *</label>
+        <select id="sAgency" onchange="loadJobsForAgency()"><option value="">Select agency...</option></select>
+      </div>
+      <div class="form-group">
+        <label>Job order</label>
+        <select id="sJob"><option value="">Select job order...</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Candidate name *</label><input type="text" id="sCandName" placeholder="John Doe" /></div>
+      <div class="form-group"><label>Candidate email</label><input type="text" id="sCandEmail" placeholder="john@email.com" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Status</label>
+        <select id="sStatus">
+          <option value="submitted">Submitted</option>
+          <option value="interviewing">Interviewing</option>
+          <option value="offered">Offer extended</option>
+          <option value="placed">Placed</option>
+          <option value="rejected">Rejected</option>
+          <option value="withdrew">Withdrew</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Submitted date</label><input type="date" id="sDate" style="height:34px;" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Notes</label>
+      <textarea id="sNotes" placeholder="Interview feedback, offer details, etc..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="saveSubmission()"><i class="ti ti-device-floppy"></i> Save submission</button>
+      <button class="btn" onclick="closeSubmissionModal()">Cancel</button>
+    </div>
   </div>
-  <div id="results"></div>
-  <p class="powered-by">Powered by Sugar Scanner AI</p> <p class="powered-by" style="margin-top: 6px;"><a href="https://billing.stripe.com/p/login/00wdRa0v4eEq8zT1Cb2Nq00" style="color: var(--teal); text-decoration: none;">Manage or cancel subscription</a></p> <p class="powered-by" style="margin-top: 6px;">This tool is for informational purposes only and does not constitute medical or nutritional advice. Always consult a qualified health professional.</p> <p class="powered-by" style="margin-top: 6px;"><a href="https://billing.stripe.com/p/login/00wdRa0v4eEq8zT1Cb2Nq00" style="color: var(--teal); text-decoration: none;">
+</div>
+
+<!-- Add Candidate Modal -->
+<div class="modal-overlay" id="candidateModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="candidateModalTitle">Add candidate</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeCandidateModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Full name *</label><input type="text" id="candName" placeholder="John Doe" /></div>
+      <div class="form-group"><label>Email</label><input type="text" id="candEmail" placeholder="john@email.com" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone</label><input type="text" id="candPhone" placeholder="(555) 000-0000" /></div>
+      <div class="form-group"><label>LinkedIn</label><input type="text" id="candLinkedin" placeholder="https://linkedin.com/in/..." /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Current title</label>
+        <input type="text" id="candTitle" placeholder="Commercial Lines Account Manager" />
+      </div>
+      <div class="form-group">
+        <label>Current employer</label>
+        <input type="text" id="candEmployer" placeholder="ABC Insurance" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Lines of business</label>
+        <select id="candLines">
+          <option value="">Select...</option>
+          <option>Commercial Lines</option>
+          <option>Personal Lines</option>
+          <option>Employee Benefits</option>
+          <option>Life & Health</option>
+          <option>Risk Management</option>
+          <option>Surety/Bond</option>
+          <option>Claims</option>
+          <option>Cyber & Professional Liability</option>
+          <option>Specialty Programs</option>
+          <option>Private Client / High-Net-Worth</option>
+          <option>Management/Leadership</option>
+          <option>Operations</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="candStatus">
+          <option value="active">Actively looking</option>
+          <option value="passive">Passively looking</option>
+          <option value="placed">Placed</option>
+          <option value="not-looking">Not looking</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="candLocation" placeholder="Los Angeles, CA" />
+      </div>
+      <div class="form-group">
+        <label>Desired salary</label>
+        <input type="text" id="candSalary" placeholder="$80k - $100k" />
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Notes</label>
+      <textarea id="candNotes" placeholder="Experience, licenses, key skills, availability..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="saveCandidate()"><i class="ti ti-device-floppy"></i> Save candidate</button>
+      <button class="btn" onclick="closeCandidateModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Client Modal -->
+<div class="modal-overlay" id="clientModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="clientModalTitle">Add client</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeClientModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Company name *</label><input type="text" id="clName" placeholder="ABC Insurance Group" /></div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="clStatus">
+          <option value="active">Active</option>
+          <option value="prospect">Prospect</option>
+          <option value="inactive">Inactive</option>
+          <option value="do-not-contact">Do not contact</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Primary contact</label><input type="text" id="clContact" placeholder="Jane Smith" /></div>
+      <div class="form-group"><label>Phone</label><input type="text" id="clPhone" placeholder="(555) 000-0000" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Email</label><input type="text" id="clEmail" placeholder="jane@company.com" /></div>
+      <div class="form-group"><label>Website</label><input type="text" id="clWebsite" placeholder="company.com" /></div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Notes</label>
+      <textarea id="clNotes" placeholder="Contract details, relationship history, key notes..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="saveClient()"><i class="ti ti-device-floppy"></i> Save client</button>
+      <button class="btn" onclick="closeClientModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
 <script>
-  const MAX_FREE_SCANS = 3;
-  const STORAGE_KEY = 'sugar_scanner_scans';
-  const SUBSCRIBED_KEY = 'sugar_scanner_subscribed';
-  let stream = null, capturedB64 = null, capturedMediaType = 'image/jpeg';
+  // ── Config ──
+  const SUPABASE_URL = 'https://tmkneukyakuoidwbdcmy.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_VhQkUelgk-pWmZND0xPupQ_iR1m5Kgo';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  
 
-  function isSubscribed() { try { return localStorage.getItem(SUBSCRIBED_KEY) === 'true'; } catch(e) { return false; } }
-  function getScansUsed() { try { return parseInt(localStorage.getItem(STORAGE_KEY) || '0'); } catch(e) { return 0; } }
-  function incrementScans() { try { localStorage.setItem(STORAGE_KEY, getScansUsed() + 1); } catch(e) {} }
-  function getScansLeft() { if (isSubscribed()) return 999; return Math.max(0, MAX_FREE_SCANS - getScansUsed()); }
+  // ── Coverage taxonomy ──
+  const TAXONOMY = {
+    "Personal insurance": ["Personal auto","Classic/collector car","Antique auto","Motorcycle","RV insurance","ATV/UTV insurance","Boat & watercraft","Personal watercraft (jet ski)","Snowmobile","Homeowners","Condo insurance","Renters insurance","Dwelling fire/landlord insurance","Vacant property insurance","Mobile/manufactured home","Secondary/vacation home","High-value home insurance","Personal umbrella liability","Excess liability (personal)","Personal cyber liability","Identity theft protection","Flood insurance","Earthquake insurance","Jewelry insurance","Fine arts insurance","Collectibles insurance","Wedding insurance","Pet insurance","Travel insurance"],
+    "Property & casualty": ["Commercial property","Building coverage","Business personal property","Equipment breakdown","Inland marine","Installation floater","Builders risk","Business interruption","Extra expense coverage","General liability","Products liability","Completed operations","Premises liability","Contractual liability","Excess liability (commercial)","Commercial umbrella liability"],
+    "Commercial auto & trucking": ["Commercial auto","Fleet insurance","Hired & non-owned auto","Motor truck cargo","Trucking liability","Physical damage coverage"],
+    "Workers' compensation": ["Workers' compensation","Employers liability","Stop gap coverage","USL&H","Jones Act coverage","Maritime workers compensation"],
+    "Professional & management liability": ["Errors & omissions (E&O)","Professional liability","Medical malpractice","Architects & engineers liability","Technology E&O","Real estate E&O","Insurance agents E&O","Directors & officers (D&O)","Employment practices liability (EPLI)","Fiduciary liability","Crime insurance","Kidnap & ransom","Workplace violence coverage"],
+    "Cyber & technology": ["Cyber liability","Data breach coverage","Privacy liability","Network security liability","Technology E&O (cyber)","Media liability","Ransomware coverage","Social engineering fraud"],
+    "Employee benefits": ["Group health","Medical insurance","Dental insurance","Vision insurance","Prescription drug plans","Group life insurance","AD&D insurance","Short-term disability","Long-term disability","Critical illness (voluntary)","Accident insurance","Hospital indemnity","Cancer insurance","Supplemental life insurance"],
+    "Retirement & executive benefits": ["401(k) plans","403(b) plans","Deferred compensation plans","Executive bonus plans","Key person insurance","Buy-sell funding"],
+    "Life insurance": ["Term life","Whole life","Universal life","Indexed universal life (IUL)","Variable universal life","Survivorship life","Final expense insurance"],
+    "Health insurance": ["Individual medical plans","ACA marketplace plans","Medicare supplements","Medicare advantage","Medicare Part D","Critical illness (individual)","Accident plans","Hospital indemnity (individual)","Long-term care insurance"],
+    "Construction": ["Builders risk (construction)","Contractor general liability","Artisan contractor programs","Wrap-ups (OCIP/CCIP)","Surety bonds (construction)"],
+    "Transportation": ["Trucking insurance","Motor carrier insurance","Cargo insurance","Warehouse legal liability"],
+    "Environmental": ["Pollution liability","Environmental impairment liability","Underground storage tank coverage"],
+    "Energy": ["Oil & gas insurance","Renewable energy insurance","Utility insurance"],
+    "Aviation & marine": ["Aviation liability","Aircraft hull","Airport liability","Ocean marine","Inland marine (aviation/marine)","Marine cargo"],
+    "Hospitality": ["Hotel insurance","Restaurant insurance","Liquor liability","Event insurance"],
+    "Healthcare programs": ["Medical malpractice (programs)","Healthcare professional liability","Allied healthcare programs"],
+    "Real estate": ["Apartment programs","Commercial real estate insurance","Property management E&O","Habitational insurance"],
+    "Surety & bonds": ["Contract bonds","Bid bonds","Performance bonds","Payment bonds","Maintenance bonds","Commercial bonds","License & permit bonds","Fidelity bonds","Court bonds","Notary bonds"],
+    "Financial products": ["Trade credit insurance","Political risk insurance","Representations & warranties insurance","Transactional risk insurance","Captive insurance programs","Self-insurance programs","Alternative risk programs"]
+  };
 
-  function updateCounter() {
-    const counterEl = document.getElementById('scanCounter');
-    const textEl = document.getElementById('scansLeftText');
-    const labelEl = document.getElementById('scanLabel');
-    if (isSubscribed()) {
-      counterEl.style.background = 'var(--green-light)'; counterEl.style.borderColor = 'var(--green-text)';
-      textEl.style.color = 'var(--green-text)'; textEl.textContent = '✓ Unlimited scans';
-      labelEl.textContent = 'Active subscriber'; return;
-    }
-    const left = getScansLeft();
-    if (left === 0) {
-      counterEl.style.background = 'var(--red-light)'; counterEl.style.borderColor = 'var(--red)';
-      textEl.style.color = 'var(--red-dark)'; textEl.textContent = 'No free scans remaining';
-      showPaywall();
-    } else { textEl.textContent = `${left} free scan${left !== 1 ? 's' : ''} remaining`; }
-  }
+  const AMS_SYSTEMS = ['Epic','AMS360','Sagitta','Applied TAM','HawkSoft','QQ Catalyst','Agency Zoom','EZLynx','Vertafore','Other'];
 
-  function showPaywall() {
-    document.getElementById('paywall').style.display = 'block';
-    if (typeof gtag === 'function') { gtag('event', 'paywall_shown'); }
-    document.getElementById('cameraFrame').style.opacity = '0.4';
-    document.getElementById('cameraFrame').style.pointerEvents = 'none';
-    document.getElementById('controls').style.opacity = '0.4';
-    document.getElementById('controls').style.pointerEvents = 'none';
-  }
+  let selectedCoverages = new Set();
 
-async function subscribe(plan, cardEl) {
-    if (typeof gtag === 'function') { gtag('event', 'subscribe_clicked', { plan: plan }); }
-    const loadingEl = document.getElementById(plan + 'Loading');
-    if (loadingEl) loadingEl.style.display = 'block';
-    cardEl.style.pointerEvents = 'none';
-    try {
-      const resp = await fetch('/.netlify/functions/create-checkout', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan })
+  // ── Coverage tree ──
+  function renderTree(filter) {
+    const tree = document.getElementById('covTree');
+    const f = (filter || '').toLowerCase().trim();
+    let html = '';
+    Object.entries(TAXONOMY).forEach(([cat, items]) => {
+      const visible = f ? items.filter(i => i.toLowerCase().includes(f) || cat.toLowerCase().includes(f)) : items;
+      if (!visible.length) return;
+      html += `<div><p class="cov-cat-label">${cat}</p><div class="cov-options">`;
+      visible.forEach(item => {
+        html += `<button type="button" class="cov-pill${selectedCoverages.has(item) ? ' active' : ''}" data-item="${esc(item)}">${esc(item)}</button>`;
       });
-      const data = await resp.json();
-      if (data.error) throw new Error(data.error);
-      window.location.href = data.url;
-    } catch(e) {
-      alert('Something went wrong. Please try again or email heather@sugarscannerapp.com');
-      if (loadingEl) loadingEl.style.display = 'none';
-      cardEl.style.pointerEvents = 'auto';
-    }
+      html += `</div></div>`;
+    });
+    if (!html) html = '<p style="font-size:12px;color:var(--text-3);padding:4px;">No coverages match.</p>';
+    tree.innerHTML = html;
+    tree.querySelectorAll('.cov-pill').forEach(b => b.addEventListener('click', () => toggleCov(b.getAttribute('data-item'))));
   }
 
-  function checkUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('subscribed') === 'true') {
-      try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
-      document.getElementById('successBanner').style.display = 'block';
-      document.getElementById('paywall').style.display = 'none';
-      document.getElementById('cameraFrame').style.opacity = '1';
-      document.getElementById('cameraFrame').style.pointerEvents = 'auto';
-      document.getElementById('controls').style.opacity = '1';
-      document.getElementById('controls').style.pointerEvents = 'auto';
-      window.history.replaceState({}, '', '/');
-    }
+  function toggleCov(item) {
+    selectedCoverages.has(item) ? selectedCoverages.delete(item) : selectedCoverages.add(item);
+    renderTree(document.getElementById('covSearch').value);
+    renderTags();
   }
 
-  function setStatus(msg) { document.getElementById('status').textContent = msg; }
-  function setControls(html) { document.getElementById('controls').innerHTML = html; }
+  function renderTags() {
+    const el = document.getElementById('selectedTags');
+    if (!selectedCoverages.size) { el.innerHTML = ''; return; }
+    el.innerHTML = [...selectedCoverages].map(item =>
+      `<span class="tag">${esc(item)}<i class="ti ti-x" data-item="${esc(item)}"></i></span>`
+    ).join('');
+    el.querySelectorAll('i').forEach(i => i.addEventListener('click', () => toggleCov(i.getAttribute('data-item'))));
+  }
 
-  async function startCamera() {
-    if (getScansLeft() === 0) { showPaywall(); return; }
+  function filterCoverages() { renderTree(document.getElementById('covSearch').value); }
+
+  // ── Search ──
+  async function runSearch() {
+    const stateRaw = document.getElementById('state').value;
+    const state = stateRaw === 'ALL_STATES' ? 'the United States (all 50 states)' : stateRaw;
+    const size = document.getElementById('agencySize').value;
+    const coverages = [...selectedCoverages];
+    const statusEl = document.getElementById('searchStatus');
+    const btn = document.getElementById('searchBtn');
+
+    if (!stateRaw) { statusEl.innerHTML = '<span style="color:#A32D2D">Please select a state.</span>'; return; }
+    if (!coverages.length) { statusEl.innerHTML = '<span style="color:#A32D2D">Please select at least one coverage.</span>'; return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader"></i> Searching...';
+    statusEl.textContent = 'Finding agencies, this takes about 15 seconds...';
+    document.getElementById('searchResults').innerHTML = '';
+
+    const prompt = `You are an expert insurance industry researcher. List as many insurance brokerages as possible (aim for 20-25) operating in ${state}${size ? `, that are a ${size}` : ''} that offer any of these coverages: ${coverages.join(', ')}. Include large nationals, regional, boutique, and independent agencies.
+
+For each brokerage provide:
+1. name
+2. overview (one sentence)
+3. size (Large national brokerage / Regional / Boutique specialty / Independent local agency)
+4. matchedCoverages (array — only from this list: ${coverages.join(', ')})
+5. feature (one notable differentiator)
+6. website (domain only, e.g. example.com)
+7. estimatedEmployees (e.g. "50-100", "500+", "10-25")
+8. amsSystem (most likely AMS from: Epic, AMS360, Sagitta, Applied TAM, HawkSoft, QQ Catalyst, EZLynx, Vertafore, or Unknown)
+9. linesOfBusiness (array, e.g. ["Commercial Lines", "Employee Benefits", "Personal Lines"])
+
+Respond ONLY as a JSON array. No markdown, no backticks. Format:
+[{"name":"...","overview":"...","size":"...","matchedCoverages":[...],"feature":"...","website":"...","estimatedEmployees":"...","amsSystem":"...","linesOfBusiness":[...]}]`;
+
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
-      const video = document.getElementById('video');
-      video.srcObject = stream;
-      document.getElementById('placeholder').style.display = 'none';
-      document.getElementById('preview').style.display = 'none';
-      video.style.display = 'block';
-      setStatus('Frame the ingredient list clearly, then take a photo');
-      setControls(`<button class="btn btn-primary" onclick="capture()"><i class="ti ti-camera"></i> Take photo</button>
-        <button class="btn" onclick="stopCamera()"><i class="ti ti-x"></i> Cancel</button>`);
-    } catch(e) { setStatus('Camera access denied — try uploading an image instead.'); }
-  }
-
-  function stopCamera() {
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    document.getElementById('video').style.display = 'none';
-    document.getElementById('placeholder').style.display = 'flex';
-    setStatus('');
-    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
-      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>`);
-  }
-
-  function capture() {
-    const video = document.getElementById('video'), canvas = document.getElementById('canvas');
-    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    capturedB64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
-    capturedMediaType = 'image/jpeg';
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    const preview = document.getElementById('preview');
-    preview.src = 'data:image/jpeg;base64,' + capturedB64;
-    preview.style.display = 'block';
-    document.getElementById('video').style.display = 'none';
-    setStatus('Photo captured — tap Scan to analyze');
-    setControls(`<button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
-      <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Retake</button>`);
-  }
-
-  function handleFileUpload(event) {
-    if (getScansLeft() === 0) { showPaywall(); return; }
-    const file = event.target.files[0]; if (!file) return;
-    capturedMediaType = file.type || 'image/jpeg';
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const dataUrl = e.target.result; capturedB64 = dataUrl.split(',')[1];
-      const preview = document.getElementById('preview');
-      preview.src = dataUrl; preview.style.display = 'block';
-      document.getElementById('placeholder').style.display = 'none';
-      document.getElementById('video').style.display = 'none';
-      setStatus('Image loaded — tap Scan to analyze');
-      setControls(`<button class="btn btn-primary" onclick="analyzeImage()"><i class="ti ti-search"></i> Scan for sugars</button>
-        <button class="btn" onclick="retake()"><i class="ti ti-refresh"></i> Choose different image</button>`);
-    };
-    reader.readAsDataURL(file); event.target.value = '';
-  }
-
-  function retake() {
-    document.getElementById('preview').style.display = 'none';
-    document.getElementById('placeholder').style.display = 'flex';
-    document.getElementById('results').innerHTML = ''; capturedB64 = null;
-    setStatus('');
-    setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Take photo</button>
-      <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>`);
-  }
-
-  async function analyzeImage() {
-    if (getScansLeft() === 0) { showPaywall(); return; }
-    if (!capturedB64) return;
-    document.getElementById('loader').style.display = 'flex';
-    document.getElementById('results').innerHTML = '';
-    setControls(''); setStatus('');
-    try {
-      const resp = await fetch('/.netlify/functions/analyze', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageData: capturedB64, mediaType: capturedMediaType })
+      const response = await fetch('/.netlify/functions/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
       });
-      const parsed = await resp.json();
-      if (parsed.error) throw new Error(parsed.error);
-      if (!isSubscribed()) { incrementScans(); updateCounter(); }
-renderResults(parsed);
-if (typeof gtag === 'function') { gtag('event', 'scan_completed'); }
-    } catch(e) {
-      document.getElementById('results').innerHTML = `<div class="result-card">
-        <p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p>
-        <p class="error-detail">${e.message || 'Unknown error'}</p></div>`;
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error?.message || 'API error');
+      if (!data.content) throw new Error("No content in response: " + JSON.stringify(data).slice(0,300));
+
+      const text = data.content.map(i => i.text || '').join('');
+      const clean = text.replace(/```json|```/g, '').trim();
+      let agencies; try { agencies = JSON.parse(clean); } catch(e) { throw new Error("JSON parse failed: " + clean.slice(0,200)); }
+      if (!Array.isArray(agencies)) throw new Error("Not an array: " + clean.slice(0,200));
+
+      statusEl.textContent = '';
+      renderSearchResults(agencies, state, coverages);
+    } catch (err) {
+      statusEl.innerHTML = `<span style="color:#A32D2D">Error: ${esc(err.message)}</span>`;
     }
-    document.getElementById('loader').style.display = 'none';
-    if (getScansLeft() > 0) {
-      setControls(`<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Scan another</button>
-        <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="ti ti-upload"></i> Upload image</button>`);
-    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-search"></i> Find agencies';
   }
 
-  function giClass(cat) {
-    if (!cat) return '';
-    if (cat.startsWith('high')) return 'gi-high';
-    if (cat.startsWith('medium')) return 'gi-medium';
-    if (cat.startsWith('low')) return 'gi-low';
-    return '';
-  }
+  function renderSearchResults(agencies, state, coverages) {
+    const el = document.getElementById('searchResults');
+    let html = `<div class="results-header"><span>Found ${agencies.length} agencies in <strong>${esc(state)}</strong></span></div>`;
+    html += '<div class="agency-grid">';
 
-  function loadColor(load) {
-    if (load === 'high') return { bg: 'var(--red-light)', text: 'var(--red-dark)' };
-    if (load === 'moderate') return { bg: 'var(--amber-light)', text: 'var(--amber-text)' };
-    return { bg: 'var(--green-light)', text: 'var(--green-text)' };
-  }
+    agencies.forEach((a, i) => {
+      const matched = a.matchedCoverages || [];
+      const tags = matched.slice(0, 6).map(cv => `<span class="agency-tag">${esc(cv)}</span>`).join('');
+      const lobs = (a.linesOfBusiness || a.l || []).map(l => `<span class="agency-tag">${esc(l)}</span>`).join('');
+      html += `
+      <div class="agency-card">
+        <div class="agency-card-top">
+          <div class="agency-identity">
+            <div class="agency-icon"><i class="ti ${sizeIcon(a.size)}"></i></div>
+            <div>
+              <div class="agency-name">${esc(a.name||a.n)}</div>
+              <div class="agency-meta">${esc(a.size||a.s||'')} · ${matched.length}/${coverages.length} matched</div>
+            </div>
+          </div>
+          <div class="agency-actions">
+            ${a.website ? `<a href="https://${esc(a.website||a.w)}" target="_blank" rel="noopener" class="btn btn-sm btn-ghost"><i class="ti ti-external-link"></i></a>` : ''}
+            <button class="btn btn-sm btn-primary" onclick='saveAgency(${JSON.stringify(JSON.stringify(a))})'>
+              <i class="ti ti-bookmark"></i> Save
+            </button>
+          </div>
+        </div>
+        <p class="agency-desc">${esc(a.overview||a.o)}</p>
+        <div class="agency-tags">${tags}${matched.length > 6 ? `<span class="agency-tag">+${matched.length - 6} more</span>` : ''}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          ${(a.amsSystem||a.a) ? `<span class="ams-badge"><i class="ti ti-device-desktop" style="font-size:10px;"></i> ${esc(a.amsSystem||a.a)}</span>` : ''}
+          ${(a.estimatedEmployees||a.e) ? `<span class="agency-tag"><i class="ti ti-users" style="font-size:10px;"></i> ${esc(a.estimatedEmployees||a.e)} employees</span>` : ''}
+          ${(a.dataSource||a.d) === 'web-verified' ? `<span style="background:#EAF3DE;color:#27500A;font-size:11px;padding:2px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:3px;"><i class="ti ti-circle-check" style="font-size:11px;"></i> Web verified</span>` : '<span style="background:#f5f5f3;color:#888780;font-size:11px;padding:2px 8px;border-radius:6px;">AI estimated</span>'}
+          ${lobs}
+          ${(a.segments||a.g||[]).map(s => `<span style="background:var(--purple-bg);color:var(--purple-text);font-size:11px;padding:2px 8px;border-radius:6px;">${esc(s)}</span>`).join('')}
+        </div>
+      </div>`;
+    });
 
-  function renderResults(data) {
-    const el = document.getElementById('results');
-    if (!data.ingredients_found) {
-      el.innerHTML = `<div class="result-card"><p class="no-sugar"><i class="ti ti-alert-circle" style="font-size:24px;display:block;margin:0 auto 8px;"></i>No ingredient label detected. Please try a clearer photo.</p></div>`;
-      return;
-    }
-    const items = data.sugar_alternatives || [];
-    const lc = loadColor(data.overall_sugar_load);
-    let html = `<div class="result-card"><div class="result-header">
-      <i class="ti ti-report-search" style="font-size:18px;"></i><span>Scan results</span>
-      <span class="badge ${items.length > 0 ? 'badge-danger' : 'badge-success'}">${items.length} sugar${items.length !== 1 ? 's' : ''} found</span>
-      <span class="badge" style="margin-left:auto;background:${lc.bg};color:${lc.text};">${data.overall_sugar_load || ''} sugar load</span>
-      </div><p class="summary-text">${data.summary || ''}</p></div>`;
-    if (items.length === 0) {
-      html += `<div class="no-sugar"><i class="ti ti-circle-check" style="font-size:28px;color:var(--teal);display:block;margin:0 auto 8px;"></i>No sugar alternatives detected.</div>`;
-    } else {
-      items.forEach(s => {
-        html += `<div class="sugar-item"><div class="sugar-name">${s.name} <span class="sugar-aka">— ${s.common_name || ''}</span></div>
-          <div style="margin:6px 0;"><span class="sugar-gi ${giClass(s.gi_category)}">GI: ${s.gi_index || 'N/A'}</span>
-          <span class="sugar-type">${s.type || ''}</span></div>
-          <div class="sugar-detail"><strong>Health effects:</strong> ${s.health_effects || ''}</div>
-          <div class="sugar-detail"><strong>How it's processed:</strong> ${s.how_processed || ''}</div></div>`;
-      });
-    }
+    html += '</div>';
     el.innerHTML = html;
   }
 
-  checkUrlParams();
-  updateCounter();
+  // ── Save agency ──
+  async function saveAgency(agencyJson) {
+    const a = JSON.parse(agencyJson);
+    const { error } = await sb.from('agencies').insert({
+      name: a.name,
+      state: document.getElementById('state').value,
+      size: a.size,
+      lines_of_business: a.linesOfBusiness || [],
+      coverages: a.matchedCoverages || [],
+      ams_system: a.amsSystem || '',
+      employee_count: a.estimatedEmployees || '',
+      website: a.website || '',
+      overview: a.overview || '',
+      feature: a.feature || '',
+      status: 'prospect'
+    });
+
+    if (error) {
+      showToast('Error saving agency: ' + error.message);
+    } else {
+      showToast(`${a.name} saved to your pipeline`);
+    }
+  }
+
+  // ── Load saved agencies ──
+  async function loadSaved() {
+    const status = document.getElementById('filterStatus').value;
+    let query = sb.from('agencies').select('*').order('created_at', { ascending: false });
+    if (status) query = query.eq('status', status);
+
+    const { data, error } = await query;
+
+    const el = document.getElementById('savedContent');
+    if (error) { el.innerHTML = `<p class="error-msg">Error loading: ${esc(error.message)}</p>`; return; }
+    if (!data.length) {
+      el.innerHTML = '<div class="empty"><i class="ti ti-bookmark"></i>No saved agencies yet — discover and save some first.</div>';
+      return;
+    }
+
+    let html = `<div class="table-wrap"><table>
+      <thead><tr>
+        <th>Agency</th><th>State</th><th>Size</th><th>AMS</th><th>Lines</th><th></th>
+      </tr></thead><tbody>`;
+
+    data.forEach(a => {
+      const lines = (a.lines_of_business || []).slice(0, 2).join(', ');
+      html += `<tr>
+        <td>
+          <div style="font-weight:500;font-size:13px;">${esc(a.name)}</div>
+          ${a.website ? `<a href="https://${esc(a.website||a.w)}" target="_blank" class="link">${esc(a.website)}</a>` : ''}
+        </td>
+        <td>${esc(a.state || '')}</td>
+        <td style="font-size:12px;">${esc(a.size || '')}</td>
+        <td>${a.ams_system ? `<span class="ams-badge">${esc(a.ams_system)}</span>` : ''}</td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(lines)}</td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-ghost" onclick="openAgencyDetail('${a.id}')" title="View details"><i class="ti ti-eye"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick='openAddContact("${a.id}")' title="Add contact"><i class="ti ti-user-plus"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick='openAddOutreach("${a.id}")' title="Log outreach"><i class="ti ti-phone"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick='openAddJob("${a.id}")' title="Add job order"><i class="ti ti-briefcase"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick="deleteAgency('${a.id}')" title="Delete" style="color:#A32D2D"><i class="ti ti-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+    });
+
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  // ── Update status ──
+  async function updateStatus(id, status) {
+    const { error } = await sb.from('agencies').update({ status }).eq('id', id);
+    if (error) showToast('Error updating status');
+    else showToast('Status updated');
+  }
+
+  // ── Delete agency ──
+  async function deleteAgency(id) {
+    if (!confirm('Remove this agency from your pipeline?')) return;
+    const { error } = await sb.from('agencies').delete().eq('id', id);
+    if (error) showToast('Error deleting agency');
+    else { showToast('Agency removed'); loadSaved(); }
+  }
+
+  // ── Agency detail modal ──
+  async function openAgencyDetail(id) {
+    const { data, error } = await sb.from('agencies').select('*').eq('id', id).single();
+    if (error) { showToast('Error loading agency'); return; }
+
+    document.getElementById('modalTitle').textContent = data.name;
+    document.getElementById('modalBody').innerHTML = `
+      <div class="form-row" style="margin-bottom:1rem;">
+        <div><p class="section-label">State</p><p style="font-size:13px;">${esc(data.state||'—')}</p></div>
+        <div><p class="section-label">Size</p><p style="font-size:13px;">${esc(data.size||'—')}</p></div>
+      </div>
+      <div class="form-row" style="margin-bottom:1rem;">
+        <div><p class="section-label">AMS system</p><p style="font-size:13px;">${esc(data.ams_system||'—')}</p></div>
+        <div><p class="section-label">Employees</p><p style="font-size:13px;">${esc(data.employee_count||'—')}</p></div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <p class="section-label">Overview</p>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.5;">${esc(data.overview||'—')}</p>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <p class="section-label">Coverages</p>
+        <div>${(data.coverages||[]).map(c=>`<span class="agency-tag">${esc(c)}</span>`).join('')||'—'}</div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <p class="section-label">Lines of business</p>
+        <div>${(data.lines_of_business||[]).map(l=>`<span class="agency-tag">${esc(l)}</span>`).join('')||'—'}</div>
+      </div>
+      <hr class="divider"/>
+      <p class="section-label">Notes</p>
+      <textarea id="notesField" style="width:100%;height:100px;font-size:13px;">${esc(data.notes||'')}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-primary btn-sm" onclick="saveNotes('${data.id}')"><i class="ti ti-device-floppy"></i> Save notes</button>
+        ${data.website ? `<a href="https://${esc(data.website)}" target="_blank" class="btn btn-sm"><i class="ti ti-external-link"></i> Visit website</a>` : ''}
+      </div>
+    `;
+    document.getElementById('agencyModal').classList.add('open');
+  }
+
+  async function saveNotes(id) {
+    const notes = document.getElementById('notesField').value;
+    const { error } = await sb.from('agencies').update({ notes }).eq('id', id);
+    if (error) showToast('Error saving notes');
+    else showToast('Notes saved');
+  }
+
+  function closeModal() {
+    document.getElementById('agencyModal').classList.remove('open');
+    loadSaved();
+  }
+
+  // ── Navigation ──
+  function showPage(page) {
+    const pages = ['discover','saved','dashboard','contacts','outreach','jobs','submissions','candidates','clients','import'];
+    pages.forEach(p => {
+      const el = document.getElementById('page-'+p);
+      if (el) el.style.display = p === page ? 'block' : 'none';
+      const nav = document.getElementById('nav-'+p);
+      if (nav) nav.classList.toggle('active', p === page);
+    });
+    if (page === 'saved') loadSaved();
+    if (page === 'dashboard') loadDashboard();
+    if (page === 'contacts') loadContacts();
+    if (page === 'outreach') loadOutreach();
+    if (page === 'jobs') loadJobs();
+    if (page === 'submissions') loadSubmissions();
+    if (page === 'candidates') loadCandidates();
+    if (page === 'clients') loadClients();
+    if (page === 'import') { csvData = null; csvHeaders = []; document.getElementById('importPreview').innerHTML = ''; }
+  }
+
+  // ── Utilities ──
+  function esc(str) {
+    if (!str) return '';
+    const d = document.createElement('div');
+    d.textContent = String(str);
+    return d.innerHTML;
+  }
+
+  function sizeIcon(size) {
+    if (!size) return 'ti-building';
+    const s = size.toLowerCase();
+    if (s.includes('national')) return 'ti-building-skyscraper';
+    if (s.includes('regional')) return 'ti-building-bank';
+    if (s.includes('boutique')) return 'ti-building-store';
+    if (s.includes('independent')) return 'ti-building-cottage';
+    return 'ti-building';
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ── Phase 2: Contacts ──
+  async function loadContacts() {
+    const { data, error } = await sb.from('contacts').select('*, agencies(name)').order('created_at', { ascending: false });
+    const el = document.getElementById('contactsContent');
+    if (error) { el.innerHTML = `<p class="error-msg">${esc(error.message)}</p>`; return; }
+    if (!data.length) { el.innerHTML = '<div class="empty"><i class="ti ti-users"></i>No contacts yet — add your first one.</div>'; return; }
+
+    let html = '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Title</th><th>Agency</th><th>Email</th><th>Phone</th><th>LinkedIn</th><th></th></tr></thead><tbody>';
+    data.forEach(c => {
+      html += `<tr>
+        <td style="font-weight:500;">${esc(c.name)}</td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(c.title||'')}</td>
+        <td style="font-size:12px;">${esc(c.agencies?.name||'')}</td>
+        <td>${c.email ? `<a href="mailto:${esc(c.email)}" class="link">${esc(c.email)}</a>` : ''}</td>
+        <td style="font-size:12px;">${esc(c.phone||'')}</td>
+        <td>${c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank" class="link"><i class="ti ti-brand-linkedin"></i></a>` : ''}</td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-ghost" onclick="openEditContact('${c.id}')" title="Edit"><i class="ti ti-edit"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick='openAddOutreach("${c.agency_id}")' title="Log outreach"><i class="ti ti-phone"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick="deleteContact('${c.id}')" style="color:#A32D2D"><i class="ti ti-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  let editingContactId = null;
+
+  async function openAddContact(agencyId) {
+    editingContactId = null;
+    document.getElementById('contactModalTitle').textContent = 'Add contact';
+    await populateAgencyDropdowns();
+    if (agencyId) document.getElementById('cAgency').value = agencyId;
+    document.getElementById('cName').value = '';
+    document.getElementById('cTitle').value = '';
+    document.getElementById('cEmail').value = '';
+    document.getElementById('cPhone').value = '';
+    document.getElementById('cLinkedin').value = '';
+    document.getElementById('cNotes').value = '';
+    document.getElementById('contactModal').classList.add('open');
+  }
+
+  async function openEditContact(id) {
+    const { data, error } = await sb.from('contacts').select('*').eq('id', id).single();
+    if (error) { showToast('Error loading contact'); return; }
+    editingContactId = id;
+    document.getElementById('contactModalTitle').textContent = 'Edit contact';
+    await populateAgencyDropdowns();
+    document.getElementById('cName').value = data.name || '';
+    document.getElementById('cTitle').value = data.title || '';
+    document.getElementById('cEmail').value = data.email || '';
+    document.getElementById('cPhone').value = data.phone || '';
+    document.getElementById('cLinkedin').value = data.linkedin || '';
+    document.getElementById('cAgency').value = data.agency_id || '';
+    document.getElementById('cNotes').value = data.notes || '';
+    document.getElementById('contactModal').classList.add('open');
+  }
+
+  async function saveContact() {
+    const name = document.getElementById('cName').value.trim();
+    if (!name) { showToast('Name is required'); return; }
+    const payload = {
+      name,
+      title: document.getElementById('cTitle').value.trim(),
+      email: document.getElementById('cEmail').value.trim(),
+      phone: document.getElementById('cPhone').value.trim(),
+      linkedin: document.getElementById('cLinkedin').value.trim(),
+      agency_id: document.getElementById('cAgency').value || null,
+      notes: document.getElementById('cNotes').value.trim()
+    };
+    let error;
+    if (editingContactId) {
+      ({ error } = await sb.from('contacts').update(payload).eq('id', editingContactId));
+    } else {
+      ({ error } = await sb.from('contacts').insert(payload));
+    }
+    if (error) { showToast('Error: ' + error.message); return; }
+    showToast(editingContactId ? 'Contact updated' : 'Contact saved');
+    closeContactModal();
+    loadContacts();
+  }
+
+  async function deleteContact(id) {
+    if (!confirm('Delete this contact?')) return;
+    await sb.from('contacts').delete().eq('id', id);
+    showToast('Contact deleted');
+    loadContacts();
+  }
+
+  function closeContactModal() { document.getElementById('contactModal').classList.remove('open'); editingContactId = null; }
+
+  // ── Phase 2: Outreach ──
+  async function loadOutreach() {
+    const { data, error } = await sb.from('outreach')
+      .select('*, agencies(name), contacts(name)')
+      .order('date', { ascending: false });
+    const el = document.getElementById('outreachContent');
+    if (error) { el.innerHTML = `<p class="error-msg">${esc(error.message)}</p>`; return; }
+    if (!data.length) { el.innerHTML = '<div class="empty"><i class="ti ti-phone"></i>No outreach logged yet.</div>'; return; }
+
+    const typeIcon = { call:'ti-phone', email:'ti-mail', linkedin:'ti-brand-linkedin', meeting:'ti-calendar', text:'ti-message', other:'ti-dots' };
+    const today = new Date().toISOString().split('T')[0];
+
+    let html = '<div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Agency</th><th>Contact</th><th>Notes</th><th>Follow-up</th><th></th></tr></thead><tbody>';
+    data.forEach(o => {
+      const date = o.date ? new Date(o.date).toLocaleDateString() : '';
+      const followUp = o.follow_up_date || '';
+      const overdue = followUp && !o.follow_up_done && followUp < today;
+      html += `<tr>
+        <td style="font-size:12px;white-space:nowrap;">${date}</td>
+        <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;"><i class="ti ${typeIcon[o.type]||'ti-dots'}"></i>${esc(o.type)}</span></td>
+        <td style="font-size:12px;font-weight:500;">${esc(o.agencies?.name||'')}</td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(o.contacts?.name||'')}</td>
+        <td style="font-size:12px;color:var(--text-2);max-width:200px;">${esc((o.notes||'').slice(0,80))}${(o.notes||'').length>80?'...':''}</td>
+        <td>${followUp ? `<span style="font-size:12px;padding:2px 8px;border-radius:6px;${overdue?'background:var(--red-bg);color:var(--red-text);font-weight:500;':'background:var(--amber-bg);color:var(--amber-text);'}">${overdue?'⚠ ':''}${followUp}${o.follow_up_done?' ✓':''}</span>` : ''}</td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            ${followUp && !o.follow_up_done ? `<button class="btn btn-sm btn-ghost" onclick="markFollowUpDone('${o.id}')" title="Mark done" style="color:var(--green)"><i class="ti ti-check"></i></button>` : ''}
+            <button class="btn btn-sm btn-ghost" onclick="deleteOutreach('${o.id}')" style="color:#A32D2D"><i class="ti ti-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  async function openAddOutreach(agencyId) {
+    await populateAgencyDropdowns();
+    if (agencyId) {
+      document.getElementById('oAgency').value = agencyId;
+      await loadContactsForAgency();
+    }
+    document.getElementById('oDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('oFollowUp').value = '';
+    document.getElementById('oNotes').value = '';
+    document.getElementById('oFollowUpDone').checked = false;
+    document.getElementById('outreachModal').classList.add('open');
+  }
+
+  async function loadContactsForAgency() {
+    const agencyId = document.getElementById('oAgency').value;
+    const sel = document.getElementById('oContact');
+    sel.innerHTML = '<option value="">Select contact...</option>';
+    if (!agencyId) return;
+    const { data } = await sb.from('contacts').select('id, name').eq('agency_id', agencyId);
+    (data||[]).forEach(c => { sel.innerHTML += `<option value="${c.id}">${esc(c.name)}</option>`; });
+  }
+
+  async function saveOutreach() {
+    const agencyId = document.getElementById('oAgency').value;
+    if (!agencyId) { showToast('Please select an agency'); return; }
+    const { error } = await sb.from('outreach').insert({
+      agency_id: agencyId,
+      contact_id: document.getElementById('oContact').value || null,
+      type: document.getElementById('oType').value,
+      date: document.getElementById('oDate').value,
+      notes: document.getElementById('oNotes').value.trim(),
+      follow_up_date: document.getElementById('oFollowUp').value || null,
+      follow_up_done: document.getElementById('oFollowUpDone').checked
+    });
+    if (error) { showToast('Error: ' + error.message); return; }
+    showToast('Outreach logged');
+    closeOutreachModal();
+    loadOutreach();
+  }
+
+  async function markFollowUpDone(id) {
+    await sb.from('outreach').update({ follow_up_done: true }).eq('id', id);
+    showToast('Follow-up marked complete');
+    loadOutreach();
+  }
+
+  async function deleteOutreach(id) {
+    if (!confirm('Delete this outreach entry?')) return;
+    await sb.from('outreach').delete().eq('id', id);
+    showToast('Entry deleted');
+    loadOutreach();
+  }
+
+  function closeOutreachModal() { document.getElementById('outreachModal').classList.remove('open'); }
+
+  // ── Phase 2: Job Orders ──
+  async function loadJobs() {
+    const { data, error } = await sb.from('job_orders').select('*, agencies(name)').order('created_at', { ascending: false });
+    const el = document.getElementById('jobsContent');
+    if (error) { el.innerHTML = `<p class="error-msg">${esc(error.message)}</p>`; return; }
+    if (!data.length) { el.innerHTML = '<div class="empty"><i class="ti ti-briefcase"></i>No job orders yet.</div>'; return; }
+
+    const statusColor = { open:'green', filled:'blue', 'on-hold':'amber', cancelled:'red' };
+    let html = '<div class="table-wrap"><table><thead><tr><th>Agency</th><th>Title</th><th>Department</th><th>Salary</th><th>Date</th><th></th></tr></thead><tbody>';
+    data.forEach(j => {
+      const sc = statusColor[j.status] || 'gray';
+      html += `<tr>
+        <td style="font-weight:500;font-size:13px;">${esc(j.agencies?.name||'')}</td>
+        <td>
+          <div style="font-size:13px;">${esc(j.title)}</div>
+          ${j.description ? `<div style="font-size:11px;color:var(--text-3);margin-top:2px;">${esc(j.description.slice(0,80))}${j.description.length>80?'...':''}</div>` : ''}
+        </td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(j.department||'')}</td>
+        <td style="font-size:12px;">${esc(j.salary||j.notes?.match(/\$[\d,k\s\-]+/i)?.[0]||'')}</td>
+        <td>
+          <select onchange="updateJobStatus('${j.id}', this.value)" style="height:28px;font-size:11px;width:100px;">
+            <option value="open" ${j.status==='open'?'selected':''}>Open</option>
+            <option value="filled" ${j.status==='filled'?'selected':''}>Filled</option>
+            <option value="on-hold" ${j.status==='on-hold'?'selected':''}>On hold</option>
+            <option value="cancelled" ${j.status==='cancelled'?'selected':''}>Cancelled</option>
+          </select>
+        </td>
+        <td style="font-size:12px;white-space:nowrap;">${new Date(j.created_at).toLocaleDateString()}</td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-ghost" onclick='openAddSubmission("${j.agency_id}","${j.id}")' title="Add submission"><i class="ti ti-user-plus"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick="deleteJob('${j.id}')" style="color:#A32D2D"><i class="ti ti-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  async function openAddJob(agencyId) {
+    await populateAgencyDropdowns();
+    if (agencyId) document.getElementById('jAgency').value = agencyId;
+    document.getElementById('jTitle').value = '';
+    document.getElementById('jDept').value = '';
+    document.getElementById('jStatus').value = 'open';
+    document.getElementById('jSalary').value = '';
+    document.getElementById('jDescription').value = '';
+    document.getElementById('jNotes').value = '';
+    document.getElementById('jobModal').classList.add('open');
+  }
+
+  async function saveJob() {
+    const agencyId = document.getElementById('jAgency').value;
+    const title = document.getElementById('jTitle').value.trim();
+    if (!agencyId || !title) { showToast('Agency and title are required'); return; }
+    const { error } = await sb.from('job_orders').insert({
+      agency_id: agencyId,
+      title,
+      department: document.getElementById('jDept').value,
+      status: document.getElementById('jStatus').value,
+      description: document.getElementById('jDescription').value.trim(),
+      notes: [document.getElementById('jSalary').value, document.getElementById('jNotes').value].filter(Boolean).join(' | ')
+    });
+    if (error) { showToast('Error: ' + error.message); return; }
+    showToast('Job order saved');
+    closeJobModal();
+    loadJobs();
+  }
+
+  async function updateJobStatus(id, status) {
+    await sb.from('job_orders').update({ status }).eq('id', id);
+    showToast('Status updated');
+  }
+
+  async function deleteJob(id) {
+    if (!confirm('Delete this job order?')) return;
+    await sb.from('job_orders').delete().eq('id', id);
+    showToast('Job order deleted');
+    loadJobs();
+  }
+
+  async function loadJobsForAgency() {
+    const agencyId = document.getElementById('sAgency').value;
+    const sel = document.getElementById('sJob');
+    sel.innerHTML = '<option value="">Select job order...</option>';
+    if (!agencyId) return;
+    const { data } = await sb.from('job_orders').select('id, title').eq('agency_id', agencyId).eq('status', 'open');
+    (data||[]).forEach(j => { sel.innerHTML += `<option value="${j.id}">${esc(j.title)}</option>`; });
+  }
+
+  function closeJobModal() { document.getElementById('jobModal').classList.remove('open'); }
+
+  // ── Phase 2: Submissions ──
+  async function loadSubmissions() {
+    const { data, error } = await sb.from('submissions')
+      .select('*, agencies(name), job_orders(title)')
+      .order('created_at', { ascending: false });
+    const el = document.getElementById('submissionsContent');
+    if (error) { el.innerHTML = `<p class="error-msg">${esc(error.message)}</p>`; return; }
+    if (!data.length) { el.innerHTML = '<div class="empty"><i class="ti ti-send"></i>No submissions yet.</div>'; return; }
+
+    const statusColor = { submitted:'amber', interviewing:'blue', offered:'purple', placed:'green', rejected:'red', withdrew:'gray' };
+    let html = '<div class="table-wrap"><table><thead><tr><th>Candidate</th><th>Agency</th><th>Job order</th><th>Date</th><th></th></tr></thead><tbody>';
+    data.forEach(s => {
+      html += `<tr>
+        <td>
+          <div style="font-weight:500;font-size:13px;">${esc(s.candidate_name)}</div>
+          ${s.candidate_email ? `<div style="font-size:11px;color:var(--text-3);">${esc(s.candidate_email)}</div>` : ''}
+        </td>
+        <td style="font-size:13px;">${esc(s.agencies?.name||'')}</td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(s.job_orders?.title||'')}</td>
+        <td>
+          <select onchange="updateSubmissionStatus('${s.id}', this.value)" style="height:28px;font-size:11px;width:120px;">
+            <option value="submitted" ${s.status==='submitted'?'selected':''}>Submitted</option>
+            <option value="interviewing" ${s.status==='interviewing'?'selected':''}>Interviewing</option>
+            <option value="offered" ${s.status==='offered'?'selected':''}>Offer extended</option>
+            <option value="placed" ${s.status==='placed'?'selected':''}>Placed</option>
+            <option value="rejected" ${s.status==='rejected'?'selected':''}>Rejected</option>
+            <option value="withdrew" ${s.status==='withdrew'?'selected':''}>Withdrew</option>
+          </select>
+        </td>
+        <td style="font-size:12px;white-space:nowrap;">${new Date(s.created_at).toLocaleDateString()}</td>
+        <td>
+          <button class="btn btn-sm btn-ghost" onclick="deleteSubmission('${s.id}')" style="color:#A32D2D"><i class="ti ti-trash"></i></button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  async function openAddSubmission(agencyId, jobId) {
+    await populateAgencyDropdowns();
+    if (agencyId) {
+      document.getElementById('sAgency').value = agencyId;
+      await loadJobsForAgency();
+      if (jobId) document.getElementById('sJob').value = jobId;
+    }
+    document.getElementById('sCandName').value = '';
+    document.getElementById('sCandEmail').value = '';
+    document.getElementById('sStatus').value = 'submitted';
+    document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('sNotes').value = '';
+    document.getElementById('submissionModal').classList.add('open');
+  }
+
+  async function saveSubmission() {
+    const agencyId = document.getElementById('sAgency').value;
+    const name = document.getElementById('sCandName').value.trim();
+    if (!agencyId || !name) { showToast('Agency and candidate name are required'); return; }
+    const { error } = await sb.from('submissions').insert({
+      agency_id: agencyId,
+      job_order_id: document.getElementById('sJob').value || null,
+      candidate_name: name,
+      candidate_email: document.getElementById('sCandEmail').value.trim(),
+      status: document.getElementById('sStatus').value,
+      notes: document.getElementById('sNotes').value.trim()
+    });
+    if (error) { showToast('Error: ' + error.message); return; }
+    showToast('Submission saved');
+    closeSubmissionModal();
+    loadSubmissions();
+  }
+
+  async function updateSubmissionStatus(id, status) {
+    await sb.from('submissions').update({ status }).eq('id', id);
+    showToast('Status updated');
+  }
+
+  async function deleteSubmission(id) {
+    if (!confirm('Delete this submission?')) return;
+    await sb.from('submissions').delete().eq('id', id);
+    showToast('Submission deleted');
+    loadSubmissions();
+  }
+
+  function closeSubmissionModal() { document.getElementById('submissionModal').classList.remove('open'); }
+
+  // ── Dashboard ──
+  async function loadDashboard() {
+    const el = document.getElementById('dashboardContent');
+    el.innerHTML = '<p class="status-msg">Loading dashboard...</p>';
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const [agencies, contacts, outreach, jobs, submissions, candidates] = await Promise.all([
+      sb.from('agencies').select('id, status'),
+      sb.from('contacts').select('id'),
+      sb.from('outreach').select('id, follow_up_date, follow_up_done').eq('follow_up_done', false),
+      sb.from('job_orders').select('id, status'),
+      sb.from('submissions').select('id, status'),
+      sb.from('candidates').select('id, status')
+    ]);
+
+    const totalAgencies = agencies.data?.length || 0;
+    const prospectCount = agencies.data?.filter(a => a.status === 'prospect').length || 0;
+    const activeCount = agencies.data?.filter(a => a.status === 'active').length || 0;
+    const totalContacts = contacts.data?.length || 0;
+    const openJobs = jobs.data?.filter(j => j.status === 'open').length || 0;
+    const totalPlacements = submissions.data?.filter(s => s.status === 'placed').length || 0;
+    const activeCandidates = candidates.data?.filter(c => c.status === 'active').length || 0;
+    const passiveCandidates = candidates.data?.filter(c => c.status === 'passive').length || 0;
+    const overdueFollowUps = outreach.data?.filter(o => o.follow_up_date && o.follow_up_date < today).length || 0;
+    const upcomingFollowUps = outreach.data?.filter(o => o.follow_up_date && o.follow_up_date >= today).length || 0;
+
+    const stat = (icon, label, value, color) => `
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:${color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="ti ${icon}" style="font-size:20px;color:${color};"></i>
+        </div>
+        <div>
+          <div style="font-size:22px;font-weight:500;color:var(--text);">${value}</div>
+          <div style="font-size:12px;color:var(--text-3);">${label}</div>
+        </div>
+      </div>`;
+
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:1.5rem;">
+        ${stat('ti-building', 'Total agencies', totalAgencies, '#185FA5')}
+        ${stat('ti-binoculars', 'Prospects', prospectCount, '#BA7517')}
+        ${stat('ti-activity', 'Active', activeCount, '#3B6D11')}
+        ${stat('ti-users', 'Contacts', totalContacts, '#6B4EAF')}
+        ${stat('ti-briefcase', 'Open job orders', openJobs, '#185FA5')}
+        ${stat('ti-trophy', 'Placements', totalPlacements, '#3B6D11')}
+        ${stat('ti-user-circle', 'Active candidates', activeCandidates, '#6B4EAF')}
+        ${stat('ti-user-search', 'Passive candidates', passiveCandidates, '#BA7517')}
+        ${stat('ti-bell', 'Upcoming follow-ups', upcomingFollowUps, '#BA7517')}
+        ${stat('ti-alert-triangle', 'Overdue follow-ups', overdueFollowUps, '#A32D2D')}
+      </div>
+      ${overdueFollowUps > 0 ? `
+      <div style="background:var(--red-bg);border:0.5px solid rgba(163,45,45,0.2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">
+        <i class="ti ti-alert-triangle" style="color:var(--red-text);font-size:18px;flex-shrink:0;"></i>
+        <div>
+          <p style="font-size:13px;font-weight:500;color:var(--red-text);">You have ${overdueFollowUps} overdue follow-up${overdueFollowUps>1?'s':''}.</p>
+          <p style="font-size:12px;color:var(--red-text);opacity:0.8;">Go to the Outreach log to review and mark them complete.</p>
+        </div>
+        <button class="btn btn-sm" onclick="showPage('outreach')" style="margin-left:auto;flex-shrink:0;">View outreach</button>
+      </div>` : ''}
+    `;
+  }
+
+  // ── Populate agency dropdowns ──
+  async function populateAgencyDropdowns() {
+    const { data } = await sb.from('agencies').select('id, name').order('name');
+    const agencies = data || [];
+    const opts = '<option value="">Select agency...</option>' + agencies.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join('');
+    ['cAgency','oAgency','jAgency','sAgency'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = opts;
+    });
+  }
+
+  // ── Update showPage to load data ──
+  const _originalShowPage = showPage;
+
+  // ── Candidates ──
+  async function loadCandidates() {
+    const { data, error } = await sb.from('candidates').select('*').order('created_at', { ascending: false });
+    const el = document.getElementById('candidatesContent');
+    if (error) { el.innerHTML = `<p class="error-msg">${esc(error.message)}</p>`; return; }
+    if (!data.length) { el.innerHTML = '<div class="empty"><i class="ti ti-user-circle"></i>No candidates yet — add your first one.</div>'; return; }
+
+    const statusColor = { active:'green', passive:'amber', placed:'blue', 'not-looking':'red' };
+    const statusLabel = { active:'Actively looking', passive:'Passively looking', placed:'Placed', 'not-looking':'Not looking' };
+    const statusBg = { active:'var(--green-bg)', passive:'var(--amber-bg)', placed:'var(--blue-bg)', 'not-looking':'var(--red-bg)' };
+    const statusTxt = { active:'var(--green-text)', passive:'var(--amber-text)', placed:'var(--blue-text)', 'not-looking':'var(--red-text)' };
+
+    let html = '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Title</th><th>Employer</th><th>Lines</th><th>Location</th><th>Status</th><th>Contact</th><th></th></tr></thead><tbody>';
+    data.forEach(c => {
+      html += `<tr>
+        <td>
+          <div style="font-weight:500;font-size:13px;">${esc(c.name)}</div>
+          ${c.salary ? `<div style="font-size:11px;color:var(--text-3);">${esc(c.salary)}</div>` : ''}
+        </td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(c.current_title||'')}</td>
+        <td style="font-size:12px;">${esc(c.current_employer||'')}</td>
+        <td style="font-size:12px;color:var(--text-2);">${esc(c.lines_of_business||'')}</td>
+        <td style="font-size:12px;">${esc(c.location||'')}</td>
+        <td>
+          <select onchange="updateCandidateStatus('${c.id}', this.value)" style="height:28px;font-size:11px;width:130px;">
+            <option value="active" ${c.status==='active'?'selected':''}>Actively looking</option>
+            <option value="passive" ${c.status==='passive'?'selected':''}>Passively looking</option>
+            <option value="placed" ${c.status==='placed'?'selected':''}>Placed</option>
+            <option value="not-looking" ${c.status==='not-looking'?'selected':''}>Not looking</option>
+          </select>
+        </td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            ${c.email ? `<a href="mailto:${esc(c.email)}" class="btn btn-sm btn-ghost" title="${esc(c.email)}"><i class="ti ti-mail"></i></a>` : ''}
+            ${c.phone ? `<a href="tel:${esc(c.phone)}" class="btn btn-sm btn-ghost" title="${esc(c.phone)}"><i class="ti ti-phone"></i></a>` : ''}
+            ${c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank" class="btn btn-sm btn-ghost"><i class="ti ti-brand-linkedin"></i></a>` : ''}
+          </div>
+        </td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-ghost" onclick="openEditCandidate('${c.id}')" title="Edit"><i class="ti ti-edit"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick="deleteCandidate('${c.id}')" style="color:#A32D2D"><i class="ti ti-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  let editingCandidateId = null;
+
+  function openAddCandidate() {
+    editingCandidateId = null;
+    document.getElementById('candidateModalTitle').textContent = 'Add candidate';
+    ['candName','candEmail','candPhone','candLinkedin','candTitle','candEmployer','candLocation','candSalary','candNotes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('candLines').value = '';
+    document.getElementById('candStatus').value = 'active';
+    document.getElementById('candidateModal').classList.add('open');
+  }
+
+  async function openEditCandidate(id) {
+    const { data, error } = await sb.from('candidates').select('*').eq('id', id).single();
+    if (error) { showToast('Error loading candidate'); return; }
+    editingCandidateId = id;
+    document.getElementById('candidateModalTitle').textContent = 'Edit candidate';
+    document.getElementById('candName').value = data.name || '';
+    document.getElementById('candEmail').value = data.email || '';
+    document.getElementById('candPhone').value = data.phone || '';
+    document.getElementById('candLinkedin').value = data.linkedin || '';
+    document.getElementById('candTitle').value = data.current_title || '';
+    document.getElementById('candEmployer').value = data.current_employer || '';
+    document.getElementById('candLines').value = data.lines_of_business || '';
+    document.getElementById('candStatus').value = data.status || 'active';
+    document.getElementById('candLocation').value = data.location || '';
+    document.getElementById('candSalary').value = data.salary || '';
+    document.getElementById('candNotes').value = data.notes || '';
+    document.getElementById('candidateModal').classList.add('open');
+  }
+
+  async function saveCandidate() {
+    const name = document.getElementById('candName').value.trim();
+    if (!name) { showToast('Name is required'); return; }
+    const payload = {
+      name,
+      email: document.getElementById('candEmail').value.trim(),
+      phone: document.getElementById('candPhone').value.trim(),
+      linkedin: document.getElementById('candLinkedin').value.trim(),
+      current_title: document.getElementById('candTitle').value.trim(),
+      current_employer: document.getElementById('candEmployer').value.trim(),
+      lines_of_business: document.getElementById('candLines').value,
+      status: document.getElementById('candStatus').value,
+      location: document.getElementById('candLocation').value.trim(),
+      salary: document.getElementById('candSalary').value.trim(),
+      notes: document.getElementById('candNotes').value.trim()
+    };
+    let error;
+    if (editingCandidateId) {
+      ({ error } = await sb.from('candidates').update(payload).eq('id', editingCandidateId));
+    } else {
+      ({ error } = await sb.from('candidates').insert(payload));
+    }
+    if (error) { showToast('Error: ' + error.message); return; }
+    showToast(editingCandidateId ? 'Candidate updated' : 'Candidate saved');
+    closeCandidateModal();
+    loadCandidates();
+  }
+
+  async function updateCandidateStatus(id, status) {
+    await sb.from('candidates').update({ status }).eq('id', id);
+    showToast('Status updated');
+  }
+
+  async function deleteCandidate(id) {
+    if (!confirm('Delete this candidate?')) return;
+    await sb.from('candidates').delete().eq('id', id);
+    showToast('Candidate deleted');
+    loadCandidates();
+  }
+
+  function closeCandidateModal() {
+    document.getElementById('candidateModal').classList.remove('open');
+    editingCandidateId = null;
+  }
+
+  // ── Clients ──
+  let editingClientId = null;
+
+  async function loadClients() {
+    const { data, error } = await sb.from('clients').select('*').order('created_at', { ascending: false });
+    const el = document.getElementById('clientsContent');
+    if (error) { el.innerHTML = `<p class="error-msg">${esc(error.message)}</p>`; return; }
+    if (!data.length) { el.innerHTML = '<div class="empty"><i class="ti ti-building-community"></i>No clients yet — add your first one.</div>'; return; }
+
+    const statusBg = { active:'var(--green-bg)', prospect:'var(--amber-bg)', inactive:'var(--bg)', 'do-not-contact':'var(--red-bg)' };
+    const statusTxt = { active:'var(--green-text)', prospect:'var(--amber-text)', inactive:'var(--text-3)', 'do-not-contact':'var(--red-text)' };
+    const statusLabel = { active:'Active', prospect:'Prospect', inactive:'Inactive', 'do-not-contact':'Do not contact' };
+
+    let html = '<div class="table-wrap"><table><thead><tr><th>Company</th><th>Status</th><th>Primary contact</th><th>Phone</th><th>Email</th><th>Website</th><th></th></tr></thead><tbody>';
+    data.forEach(c => {
+      const bg = statusBg[c.status] || 'var(--bg)';
+      const txt = statusTxt[c.status] || 'var(--text-3)';
+      html += `<tr>
+        <td>
+          <div style="font-weight:500;font-size:13px;">${esc(c.name)}</div>
+          ${c.notes ? `<div style="font-size:11px;color:var(--text-3);margin-top:2px;">${esc(c.notes.slice(0,60))}${c.notes.length>60?'...':''}</div>` : ''}
+        </td>
+        <td>
+          <span style="font-size:11px;padding:2px 8px;border-radius:6px;background:${bg};color:${txt};font-weight:500;">
+            ${statusLabel[c.status]||esc(c.status)}
+          </span>
+        </td>
+        <td style="font-size:13px;">${esc(c.primary_contact||'')}</td>
+        <td style="font-size:12px;">${c.phone ? `<a href="tel:${esc(c.phone)}" class="link">${esc(c.phone)}</a>` : ''}</td>
+        <td style="font-size:12px;">${c.email ? `<a href="mailto:${esc(c.email)}" class="link">${esc(c.email)}</a>` : ''}</td>
+        <td style="font-size:12px;">${c.website ? `<a href="https://${esc(c.website)}" target="_blank" class="link">${esc(c.website)}</a>` : ''}</td>
+        <td>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-sm btn-ghost" onclick="openEditClient('${c.id}')" title="Edit"><i class="ti ti-edit"></i></button>
+            <button class="btn btn-sm btn-ghost" onclick="deleteClient('${c.id}')" style="color:#A32D2D" title="Delete"><i class="ti ti-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }
+
+  function openAddClient() {
+    editingClientId = null;
+    document.getElementById('clientModalTitle').textContent = 'Add client';
+    ['clName','clContact','clPhone','clEmail','clWebsite','clNotes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('clStatus').value = 'active';
+    document.getElementById('clientModal').classList.add('open');
+  }
+
+  async function openEditClient(id) {
+    const { data, error } = await sb.from('clients').select('*').eq('id', id).single();
+    if (error) { showToast('Error loading client'); return; }
+    editingClientId = id;
+    document.getElementById('clientModalTitle').textContent = 'Edit client';
+    document.getElementById('clName').value = data.name || '';
+    document.getElementById('clStatus').value = data.status || 'active';
+    document.getElementById('clContact').value = data.primary_contact || '';
+    document.getElementById('clPhone').value = data.phone || '';
+    document.getElementById('clEmail').value = data.email || '';
+    document.getElementById('clWebsite').value = data.website || '';
+    document.getElementById('clNotes').value = data.notes || '';
+    document.getElementById('clientModal').classList.add('open');
+  }
+
+  async function saveClient() {
+    const name = document.getElementById('clName').value.trim();
+    if (!name) { showToast('Company name is required'); return; }
+    const payload = {
+      name,
+      status: document.getElementById('clStatus').value,
+      primary_contact: document.getElementById('clContact').value.trim(),
+      phone: document.getElementById('clPhone').value.trim(),
+      email: document.getElementById('clEmail').value.trim(),
+      website: document.getElementById('clWebsite').value.trim(),
+      notes: document.getElementById('clNotes').value.trim()
+    };
+    let error;
+    if (editingClientId) {
+      ({ error } = await sb.from('clients').update(payload).eq('id', editingClientId));
+    } else {
+      ({ error } = await sb.from('clients').insert(payload));
+    }
+    if (error) { showToast('Error: ' + error.message); return; }
+    showToast(editingClientId ? 'Client updated' : 'Client saved');
+    closeClientModal();
+    loadClients();
+  }
+
+  async function deleteClient(id) {
+    if (!confirm('Delete this client?')) return;
+    await sb.from('clients').delete().eq('id', id);
+    showToast('Client deleted');
+    loadClients();
+  }
+
+  function closeClientModal() {
+    document.getElementById('clientModal').classList.remove('open');
+    editingClientId = null;
+  }
+
+  // ── Who's Hiring ──
+  async function runHiringSearch() {
+    const stateRaw = document.getElementById('state').value;
+    const state = stateRaw === 'ALL_STATES' ? 'the United States (all 50 states)' : stateRaw;
+    const size = document.getElementById('agencySize').value;
+    const industry = document.getElementById('industry').value;
+    const commercialSegment = document.getElementById('commercialSegment').value;
+    const statusEl = document.getElementById('searchStatus');
+    const btn = document.getElementById('hiringBtn');
+
+    if (!stateRaw) { statusEl.innerHTML = '<span style="color:#A32D2D">Please select a state first.</span>'; return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="ti ti-loader"></i> Searching...';
+    statusEl.textContent = 'Identifying active hirers based on industry knowledge...';
+    document.getElementById('hiringResults').innerHTML = '';
+
+    const prompt = `You are an expert insurance industry recruiter with deep knowledge of the insurance brokerage market. Based on your training knowledge (not live web search), identify 15-20 insurance brokerages in ${state} that are generally known as active or frequent hirers${size ? `, sized as ${size}` : ''}${industry ? `, specializing in ${industry}` : ''}${commercialSegment ? `, serving ${commercialSegment}` : ''}.
+
+Use your general knowledge of which agencies tend to grow, expand, or have higher hiring volume (e.g. large nationals with M&A activity, regional firms expanding into new states, agencies known for high producer turnover).
+
+For each agency provide:
+- name: agency name
+- location: city, state
+- website: domain only
+- size: Large national / Regional / Boutique / Independent
+- openRoles: array of 3-5 typical roles they commonly hire for
+- departments: array of departments they typically hire in
+- hiringNote: one sentence on why they are known as active hirers
+- careersUrl: their careers page URL if known, otherwise empty string
+
+Respond ONLY with a compact JSON array, nothing else before or after it. No markdown formatting, no backticks, no explanation, no apologies:
+[{"name":"...","location":"...","website":"...","size":"...","openRoles":["..."],"departments":["..."],"hiringNote":"...","careersUrl":"..."}]`;
+
+    try {
+      const response = await fetch('/.netlify/functions/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: prompt }], webSearch: true })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error?.message || 'API error');
+      if (!data.content) throw new Error('No response from server');
+
+      const text = data.content.filter(i => i.type === 'text').map(i => i.text || '').join('');
+      let clean = text.replace(/```json|```/g, '').trim();
+      const arrayMatch = clean.match(/\[[\s\S]*\]/);
+      if (arrayMatch) clean = arrayMatch[0];
+      let agencies;
+      try { agencies = JSON.parse(clean); } catch(e) { throw new Error('Could not parse results: ' + clean.slice(0,150)); }
+      if (!Array.isArray(agencies)) throw new Error('Unexpected response format');
+
+      statusEl.textContent = '';
+      renderHiringResults(agencies, state);
+    } catch (err) {
+      statusEl.innerHTML = `<span style="color:#A32D2D">Error: ${esc(err.message)}</span>`;
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-briefcase"></i> Who\'s actively hiring?';
+  }
+
+  function renderHiringResults(agencies, state) {
+    const el = document.getElementById('hiringResults');
+    if (!agencies.length) {
+      el.innerHTML = '<div class="empty" style="margin-top:1rem;"><i class="ti ti-briefcase"></i>No active job postings found. Try broadening your search.</div>';
+      return;
+    }
+
+    const query = encodeURIComponent('insurance brokerage ' + state + ' jobs');
+    let html = `
+      <div style="margin:1.5rem 0 1rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <p style="font-size:13px;color:var(--text-3);">Found <strong>${agencies.length} agencies</strong> known as active hirers in <strong>${esc(state)}</strong></p>
+        </div>
+        <div style="background:var(--blue-bg);border:0.5px solid rgba(24,95,165,0.2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:12px;color:var(--blue-text);font-weight:500;">Search live job boards:</span>
+          <a href="https://www.linkedin.com/jobs/search/?keywords=insurance+brokerage&location=${esc(state)}" target="_blank" class="btn btn-sm" style="font-size:11px;color:var(--blue-text);border-color:rgba(24,95,165,0.3);"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>
+          <a href="https://www.indeed.com/jobs?q=insurance+brokerage&l=${esc(state)}" target="_blank" class="btn btn-sm" style="font-size:11px;color:var(--blue-text);border-color:rgba(24,95,165,0.3);"><i class="ti ti-search"></i> Indeed</a>
+          <a href="https://www.ziprecruiter.com/jobs/search?search=insurance+brokerage&location=${esc(state)}" target="_blank" class="btn btn-sm" style="font-size:11px;color:var(--blue-text);border-color:rgba(24,95,165,0.3);"><i class="ti ti-search"></i> ZipRecruiter</a>
+          <a href="https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource=searchBtn&typedKeyword=insurance+brokerage&sc.keyword=insurance+brokerage&locT=S&locId=&jobType=" target="_blank" class="btn btn-sm" style="font-size:11px;color:var(--blue-text);border-color:rgba(24,95,165,0.3);"><i class="ti ti-search"></i> Glassdoor</a>
+        </div>
+      </div>
+      <div class="agency-grid">`;
+
+    agencies.forEach(a => {
+      const roles = (a.openRoles || []).map(r =>
+        `<span style="display:inline-block;background:var(--green-bg);color:var(--green-text);font-size:11px;padding:3px 8px;border-radius:6px;margin:0 4px 4px 0;">${esc(r)}</span>`
+      ).join('');
+      const depts = (a.departments || []).map(d =>
+        `<span class="agency-tag">${esc(d)}</span>`
+      ).join('');
+
+      html += `
+      <div class="agency-card" style="border-left:3px solid var(--green);">
+        <div class="agency-card-top">
+          <div class="agency-identity">
+            <div class="agency-icon" style="background:var(--green-bg);"><i class="ti ti-building-store" style="color:var(--green-text);"></i></div>
+            <div>
+              <div class="agency-name">${esc(a.name)}</div>
+              <div class="agency-meta">${esc(a.location||'')} · ${esc(a.size||'')} · ${(a.openRoles||[]).length} open role${(a.openRoles||[]).length!==1?'s':''}</div>
+            </div>
+          </div>
+          <div class="agency-actions">
+            ${a.careersUrl ? `<a href="${esc(a.careersUrl)}" target="_blank" rel="noopener" class="btn btn-sm" style="color:var(--green);border-color:var(--green);"><i class="ti ti-external-link"></i> View jobs</a>` : ''}
+            ${a.website ? `<a href="https://${esc(a.website)}" target="_blank" rel="noopener" class="btn btn-sm btn-ghost"><i class="ti ti-world"></i></a>` : ''}
+            <button class="btn btn-sm btn-primary" onclick='saveAgency(${JSON.stringify(JSON.stringify({name:a.name,size:a.size,website:a.website,overview:"Actively hiring: "+(a.openRoles||[]).join(", "),matchedCoverages:[],linesOfBusiness:a.departments||[],estimatedEmployees:"",amsSystem:"Unknown",feature:"Actively hiring "+((a.openRoles||[]).length)+" positions",dataSource:"web-verified"}))})'>
+              <i class="ti ti-bookmark"></i> Save
+            </button>
+          </div>
+        </div>
+        <div style="margin-bottom:8px;">${roles}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          ${depts}
+          ${a.hiringNote ? `<div style="font-size:12px;color:var(--text-2);margin-top:6px;font-style:italic;">${esc(a.hiringNote)}</div>` : ''}
+        </div>
+      </div>`;
+    });
+
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  // ── CSV Import ──
+  let csvData = null;
+  let csvHeaders = [];
+
+  const FIELD_MAPS = {
+    agencies: {
+      table: 'agencies',
+      label: 'Agencies',
+      fields: {
+        name: { label: 'Agency Name', guesses: ['Company Name', 'Name', 'companyName', 'CompanyName'], required: true },
+        website: { label: 'Website', guesses: ['Website', 'URL', 'companyURL', 'Web Site'] },
+        state: { label: 'State', guesses: ['State', 'Address State', 'BillingState', 'State/Province'] },
+        notes: { label: 'Notes', guesses: ['Notes', 'Comments', 'Description', 'companyDescription'] },
+        overview: { label: 'Overview', guesses: ['Industry', 'Business Sector', 'Type'] }
+      }
+    },
+    contacts: {
+      table: 'contacts',
+      label: 'Contacts',
+      fields: {
+        name: { label: 'Full Name', guesses: ['Name', 'Full Name', 'firstName,lastName', 'Contact Name'], required: true },
+        title: { label: 'Title', guesses: ['Title', 'Job Title', 'occupation'] },
+        email: { label: 'Email', guesses: ['Email', 'Email Address', 'email1'] },
+        phone: { label: 'Phone', guesses: ['Phone', 'Phone Number', 'phone1', 'Work Phone'] },
+        linkedin: { label: 'LinkedIn', guesses: ['LinkedIn', 'LinkedIn URL'] },
+        notes: { label: 'Notes', guesses: ['Notes', 'Comments'] }
+      }
+    },
+    candidates: {
+      table: 'candidates',
+      label: 'Candidates',
+      fields: {
+        name: { label: 'Full Name', guesses: ['Name', 'Full Name', 'firstName,lastName', 'Candidate Name'], required: true },
+        email: { label: 'Email', guesses: ['Email', 'Email Address', 'email1'] },
+        phone: { label: 'Phone', guesses: ['Phone', 'Phone Number', 'phone1', 'Mobile'] },
+        linkedin: { label: 'LinkedIn', guesses: ['LinkedIn', 'LinkedIn URL'] },
+        current_title: { label: 'Current Title', guesses: ['Title', 'Current Title', 'occupation'] },
+        current_employer: { label: 'Current Employer', guesses: ['Employer', 'Current Employer', 'Company'] },
+        location: { label: 'Location', guesses: ['Location', 'City', 'Address'] },
+        notes: { label: 'Notes', guesses: ['Notes', 'Comments', 'Description'] }
+      }
+    },
+    job_orders: {
+      table: 'job_orders',
+      label: 'Job Orders',
+      fields: {
+        title: { label: 'Job Title', guesses: ['Title', 'Job Title', 'jobTitle'], required: true },
+        department: { label: 'Department', guesses: ['Department', 'Category'] },
+        status: { label: 'Status', guesses: ['Status', 'jobStatus'] },
+        description: { label: 'Description', guesses: ['Description', 'Job Description', 'publicDescription'] },
+        notes: { label: 'Notes', guesses: ['Notes', 'Comments'] }
+      }
+    }
+  };
+
+  function parseCsv(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
+    if (!lines.length) return { headers: [], rows: [] };
+
+    function parseLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    const headers = parseLine(lines[0]).map(h => h.trim());
+    const rows = lines.slice(1).map(line => {
+      const values = parseLine(line);
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = (values[i] || '').trim(); });
+      return obj;
+    });
+
+    return { headers, rows };
+  }
+
+  function handleCsvUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const parsed = parseCsv(e.target.result);
+      csvData = parsed.rows;
+      csvHeaders = parsed.headers;
+      renderImportMapping();
+    };
+    reader.readAsText(file);
+  }
+
+  function guessColumn(guesses, headers) {
+    for (const guess of guesses) {
+      const found = headers.find(h => h.toLowerCase() === guess.toLowerCase());
+      if (found) return found;
+    }
+    for (const guess of guesses) {
+      const found = headers.find(h => h.toLowerCase().includes(guess.toLowerCase()));
+      if (found) return found;
+    }
+    return '';
+  }
+
+  function updateImportMapping() {
+    if (csvData) renderImportMapping();
+  }
+
+  function renderImportMapping() {
+    const type = document.getElementById('importType').value;
+    const config = FIELD_MAPS[type];
+    const el = document.getElementById('importPreview');
+
+    const headerOptions = ['<option value="">-- Skip this field --</option>']
+      .concat(csvHeaders.map(h => `<option value="${esc(h)}">${esc(h)}</option>`))
+      .join('');
+
+    let mappingHtml = `
+      <hr class="divider" />
+      <p style="font-size:13px;font-weight:500;margin-bottom:4px;">Found ${csvData.length} rows in your CSV</p>
+      <p style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Match each field below to the matching column from your file. We tried to guess automatically.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">`;
+
+    Object.entries(config.fields).forEach(([fieldKey, fieldDef]) => {
+      const guessed = guessColumn(fieldDef.guesses, csvHeaders);
+      mappingHtml += `
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:10px;align-items:center;">
+          <label style="font-size:13px;">${esc(fieldDef.label)}${fieldDef.required ? ' <span style="color:#A32D2D">*</span>' : ''}</label>
+          <select id="map_${fieldKey}" style="height:34px;">${headerOptions}</select>
+        </div>`;
+    });
+
+    mappingHtml += `</div>`;
+
+    // Preview table - first 3 rows
+    mappingHtml += `
+      <p style="font-size:12px;font-weight:500;color:var(--text-3);margin-bottom:6px;">Preview (first 3 rows of raw CSV):</p>
+      <div class="table-wrap" style="margin-bottom:16px;max-height:180px;">
+        <table style="font-size:11px;">
+          <thead><tr>${csvHeaders.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${csvData.slice(0,3).map(row => `<tr>${csvHeaders.map(h => `<td>${esc((row[h]||'').slice(0,40))}</td>`).join('')}</tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary" onclick="runImport()"><i class="ti ti-upload"></i> Import ${csvData.length} records</button>
+      <div id="importStatus" class="status-msg"></div>
+      <div id="importErrorLog" style="margin-top:10px;"></div>
+    `;
+
+    el.innerHTML = mappingHtml;
+
+    // Set guessed values after render
+    Object.entries(config.fields).forEach(([fieldKey, fieldDef]) => {
+      const guessed = guessColumn(fieldDef.guesses, csvHeaders);
+      if (guessed) document.getElementById(`map_${fieldKey}`).value = guessed;
+    });
+  }
+
+  async function runImport() {
+    const type = document.getElementById('importType').value;
+    const config = FIELD_MAPS[type];
+    const statusEl = document.getElementById('importStatus');
+    const errorEl = document.getElementById('importErrorLog');
+
+    const mapping = {};
+    let missingRequired = false;
+    Object.entries(config.fields).forEach(([fieldKey, fieldDef]) => {
+      const col = document.getElementById(`map_${fieldKey}`).value;
+      mapping[fieldKey] = col;
+      if (fieldDef.required && !col) missingRequired = true;
+    });
+
+    if (missingRequired) {
+      statusEl.innerHTML = '<span style="color:#A32D2D">Please map all required fields (marked with *).</span>';
+      return;
+    }
+
+    statusEl.textContent = `Importing ${csvData.length} records...`;
+    errorEl.innerHTML = '';
+
+    const records = csvData.map(row => {
+      const record = {};
+      Object.entries(mapping).forEach(([fieldKey, col]) => {
+        if (col && row[col] !== undefined) record[fieldKey] = row[col];
+      });
+      return record;
+    }).filter(r => r.name || r.title); // must have at least a name/title
+
+    // Insert in batches of 500
+    const batchSize = 500;
+    let imported = 0;
+    let errors = [];
+
+    for (let i = 0; i < records.length; i += batchSize) {
+      const batch = records.slice(i, i + batchSize);
+      const { error } = await sb.from(config.table).insert(batch);
+      if (error) {
+        errors.push(error.message);
+      } else {
+        imported += batch.length;
+      }
+      statusEl.textContent = `Imported ${imported} of ${records.length} records...`;
+    }
+
+    if (errors.length) {
+      errorEl.innerHTML = `<p class="error-msg">Some batches failed: ${esc(errors[0])}</p>`;
+    }
+
+    statusEl.innerHTML = `<span style="color:var(--green)">✓ Successfully imported ${imported} of ${records.length} records into ${config.label}</span>`;
+    showToast(`Imported ${imported} ${config.label.toLowerCase()}`);
+  }
+
+  // ── Init ──
+  renderTree('');
 </script>
 </body>
 </html>
