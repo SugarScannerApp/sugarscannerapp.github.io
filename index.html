@@ -543,7 +543,44 @@
     }
     el.innerHTML = html;
   }
+function generateReferralCode() {
+    const emailInput = document.getElementById('referralEmailInput');
+    const resultDiv = document.getElementById('referralCodeResult');
+    const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
 
+    if (!email || !email.includes('@')) {
+      if (resultDiv) resultDiv.innerHTML = '<span style="color:var(--red-dark);font-size:13px;">Please enter a valid email address.</span>';
+      return;
+    }
+
+    if (resultDiv) resultDiv.innerHTML = '<span style="font-size:13px;color:var(--teal-dark);">Generating your code...</span>';
+
+    fetch('/.netlify/functions/generate-referral', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, stripeCustomerId: '' })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.referral_code) {
+        if (resultDiv) {
+          resultDiv.innerHTML =
+            'Your referral code: <strong style="font-family:monospace;font-size:16px;letter-spacing:0.05em;">' +
+            data.referral_code + '</strong><br>' +
+            '<a href="/refer.html" style="color:var(--teal-dark);font-weight:700;text-decoration:underline;font-size:13px;">Track your referrals →</a>';
+        }
+        if (emailInput) emailInput.style.display = 'none';
+        const btn = document.querySelector('[onclick="generateReferralCode()"]');
+        if (btn) btn.style.display = 'none';
+      }
+    })
+    .catch(function(err) {
+      if (resultDiv) resultDiv.innerHTML = '<span style="color:var(--red-dark);font-size:13px;">Something went wrong. Try again at sugarscannerapp.com/refer.html</span>';
+    });
+  }
+
+  checkUrlParams();
+  updateCounter();
   checkUrlParams();
   updateCounter();
 </script>
