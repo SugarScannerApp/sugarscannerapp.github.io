@@ -21,7 +21,7 @@ exports.handler = async function(event, context) {
     };
   }
 const priceMap = {
-    personal: 'price_1TpgWbKXJuMb8whsvCqD9huI',
+    personal: 'price_1TgniBKXJuMb8whsoJr28zF3',
     family: 'price_1TgnisKXJuMb8whsGlUi2E5t',
     annual: 'price_1Tgnj9KXJuMb8whsc1kTzmmT'
   };
