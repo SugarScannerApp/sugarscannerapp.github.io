@@ -120,4 +120,309 @@
     }
     .btn:hover { background: var(--teal-dark); }
     .result-card {
-      background:
+      background: var(--teal-light);
+      border: 0.5px solid var(--teal);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: none;
+    }
+    .result-card.error {
+      background: var(--red-light);
+      border-color: var(--red);
+    }
+    .code-display {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--teal-dark);
+      letter-spacing: 0.05em;
+      margin: 0.5rem 0;
+      font-family: monospace;
+    }
+    .progress-bar-wrap {
+      background: rgba(0,0,0,0.08);
+      border-radius: 999px;
+      height: 12px;
+      margin: 1rem 0 0.5rem;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+    .progress-label {
+      font-size: 13px;
+      color: var(--teal-dark);
+      font-weight: 600;
+    }
+    .reward-earned {
+      background: var(--green-light);
+      border: 0.5px solid var(--green-text);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--green-text);
+      font-weight: 600;
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 0.75rem;
+      transition: background 0.15s;
+    }
+    .copy-btn:hover { background: var(--teal-dark); }
+    .share-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      line-height: 1.6;
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      border: 0.5px solid var(--border-md);
+    }
+    .how-it-works {
+      background: var(--navy);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      color: #fff;
+      text-align: center;
+    }
+    .how-it-works h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .step-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.55;
+      padding-top: 4px;
+    }
+    .step-text strong { color: #fff; }
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 12px;
+    }
+    footer a { color: #9FE1CB; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <i class="ti ti-leaf"></i> Sugar Scanner
+  </a>
+  <a href="/" class="nav-back">← Back to app</a>
+</nav>
+
+<div class="main">
+
+  <div class="hero-text">
+    <h1>🌿 Refer a Friend</h1>
+    <p>Share Sugar Scanner with friends. When 3 people subscribe using your referral code you get 3 months free!</p>
+  </div>
+
+  <!-- LOOKUP CARD -->
+  <div class="card">
+    <h2>Find your referral code</h2>
+    <div class="input-row">
+      <input
+        type="email"
+        id="emailInput"
+        placeholder="Enter your subscriber email"
+      />
+      <button class="btn" onclick="lookupCode()">Look up</button>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
+      Enter the email address you used to subscribe to Sugar Scanner
+    </p>
+
+    <!-- RESULT -->
+    <div class="result-card" id="resultCard" style="margin-top:1rem;">
+      <p style="font-size:13px;color:var(--teal-dark);font-weight:600;margin-bottom:4px;">
+        Your referral code
+      </p>
+      <div class="code-display" id="codeDisplay">SS-ABC123</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 of 3 referrals used</div>
+      <div class="reward-earned" id="rewardEarned" style="display:none;">
+        🎉 Reward earned! 3 months free has been applied to your subscription.
+      </div>
+      <button class="copy-btn" onclick="copyCode()">
+        <i class="ti ti-copy"></i> Copy code
+      </button>
+      <div class="share-text" id="shareText"></div>
+    </div>
+
+    <!-- ERROR -->
+    <div class="result-card error" id="errorCard" style="margin-top:1rem;">
+      <p style="font-size:14px;color:var(--red-dark);" id="errorMessage">
+        No referral code found for this email.
+      </p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Find your code</strong> — enter your subscriber email above to get your unique referral code
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Share it</strong> — send your code to friends, family, or post it on social media
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>They subscribe</strong> — when they sign up for Sugar Scanner they enter your code at checkout
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <strong>You earn</strong> — when 3 people subscribe using your code you get <strong>3 months free!</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Sugar Scanner LLC · <a href="/">sugarscannerapp.com</a> · <a href="mailto:heather@sugarscannerapp.com">heather@sugarscannerapp.com</a></p>
+</footer>
+
+<script>
+  let currentCode = '';
+
+  async function lookupCode() {
+    const email = document.getElementById('emailInput').value.trim().toLowerCase();
+    const resultCard = document.getElementById('resultCard');
+    const errorCard = document.getElementById('errorCard');
+
+    resultCard.style.display = 'none';
+    errorCard.style.display = 'none';
+
+    if (!email || !email.includes('@')) {
+      errorCard.style.display = 'block';
+      document.getElementById('errorMessage').textContent = 'Please enter a valid email address.';
+      return;
+    }
+
+    try {
+      const resp = await fetch('/.netlify/functions/lookup-referral', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await resp.json();
+
+      if (data.error || !data.referral_code) {
+        errorCard.style.display = 'block';
+        document.getElementById('errorMessage').textContent =
+          'No referral code found for this email. Make sure you are using your Sugar Scanner subscriber email.';
+        return;
+      }
+
+      currentCode = data.referral_code;
+      const count = data.referral_count || 0;
+      const rewardGiven = data.reward_given || false;
+      const progress = Math.min((count / 3) * 100, 100);
+
+      document.getElementById('codeDisplay').textContent = currentCode;
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('progressLabel').textContent =
+        rewardGiven
+          ? '✅ Reward earned!'
+          : `${count} of 3 referrals used — ${3 - count} more needed`;
+
+      if (rewardGiven) {
+        document.getElementById('rewardEarned').style.display = 'block';
+      }
+
+      document.getElementById('shareText').innerHTML =
+        `<strong>Your share message:</strong><br><br>
+        "Hey! I use Sugar Scanner to find hidden sugars in food labels — it's eye opening. 
+        First 3 scans are free and you don't need to download anything. 
+        Use my code <strong>${currentCode}</strong> when you subscribe 🌿 
+        sugarscannerapp.com"`;
+
+      resultCard.style.display = 'block';
+
+    } catch(e) {
+      errorCard.style.display = 'block';
+      document.getElementById('errorMessage').textContent =
+        'Something went wrong. Please try again.';
+    }
+  }
+
+  function copyCode() {
+    if (!currentCode) return;
+    navigator.clipboard.writeText(currentCode).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.innerHTML = '<i class="ti ti-check"></i> Copied!';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="ti ti-copy"></i> Copy code';
+      }, 2000);
+    });
+  }
+
+  // Allow enter key on email input
+  document.getElementById('emailInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') lookupCode();
+  });
+</script>
+</body>
+</html>
