@@ -602,15 +602,20 @@
     if (typeof gtag === 'function') gtag('event', 'paywall_shown');
   }
 
-  async function subscribe(plan, cardEl) {
+async function subscribe(plan, cardEl) {
     if (typeof gtag === 'function') gtag('event', 'subscribe_clicked', { plan });
     const loadingEl = document.getElementById(plan + 'Loading');
     if (loadingEl) loadingEl.style.display = 'block';
     cardEl.style.pointerEvents = 'none';
+
+    // Grab referral code if entered
+    const referralCodeInput = document.getElementById('referralCode');
+    const referralCode = referralCodeInput ? referralCodeInput.value.trim().toUpperCase() : '';
+
     try {
       const resp = await fetch('/.netlify/functions/create-checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan })
+        body: JSON.stringify({ plan, referralCode })
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error);
