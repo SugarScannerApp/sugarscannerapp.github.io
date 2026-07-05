@@ -676,17 +676,19 @@ async function subscribe(plan, cardEl) {
           if (data.referral_code) {
             console.log('Referral code generated:', data.referral_code);
             // Show referral code in success banner
-            const banner = document.getElementById('successBanner');
+         const banner = document.getElementById('successBanner');
             if (banner) {
               banner.innerHTML = `
-                🎉 Welcome to Sugar Scanner! Your subscription is active.<br>
-                <span style="font-size:13px;margin-top:6px;display:block;">
-                  Your referral code: <strong style="font-family:monospace;
-                  font-size:16px;letter-spacing:0.05em;">${data.referral_code}</strong>
-                  — Share it with friends! When 3 people subscribe you get
-                  3 months free. 
-                  <a href="/refer.html" style="color:var(--teal-dark);font-weight:700;">
-                  Track your referrals →</a>
+                🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>
+                <span style="font-size:13px;margin-top:8px;display:block;
+                background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">
+                  🌿 <strong>Your referral code: 
+                  <span style="font-family:monospace;font-size:16px;
+                  letter-spacing:0.05em;">${data.referral_code}</span></strong><br>
+                  Share it with friends — when 3 people subscribe using your code
+                  you get <strong>3 months free!</strong><br>
+                  <a href="/refer.html" style="color:var(--teal-dark);font-weight:700;
+                  text-decoration:underline;">Track your referrals and get your share link →</a>
                 </span>`;
             }
           }
