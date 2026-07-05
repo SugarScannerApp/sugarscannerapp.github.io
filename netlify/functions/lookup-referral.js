@@ -1,31 +1,34 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
-
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method not allowed' };
   }
 
   try {
-    const { email } = JSON.parse(event.body);
+    console.log('lookup-referral called');
+    console.log('SUPABASE_URL exists:', !!process.env.SUPABASE_URL);
+    console.log('SUPABASE_SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_KEY);
 
-    if (!email) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Email is required' })
-      };
-    }
+    const body = JSON.parse(event.body);
+    console.log('Email received:', body.email);
 
-    // Look up referral record by email
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+
+    const email = body.email.toLowerCase().trim();
+    console.log('Email cleaned:', email);
+
     const { data: referral, error } = await supabase
       .from('referrals')
       .select('*')
-      .eq('subscriber_email', email.toLowerCase().trim())
+      .eq('subscriber_email', email)
       .single();
+
+    console.log('Supabase referral:', JSON.stringify(referral));
+    console.log('Supabase error:', JSON.stringify(error));
 
     if (error || !referral) {
       return {
@@ -34,7 +37,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // Get all referral uses for this code
     const { data: uses } = await supabase
       .from('referral_uses')
       .select('new_subscriber_email, used_at')
@@ -53,7 +55,8 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error('Error looking up referral:', error);
+    console.error('Error looking up referral:', error.message);
+    console.error('Stack:', error.stack);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Failed to look up referral code' })
