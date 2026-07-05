@@ -1,8 +1,6 @@
 [build]
-  functions = "netlify/functions"
+  command = "npm install"
+  publish = "."
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
+[functions]
+  directory = "netlify/functions"
