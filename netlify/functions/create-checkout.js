@@ -20,8 +20,8 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({ error: 'Invalid request' })
     };
   }
-  const priceMap = {
-    personal: 'price_1TgniBKXJuMb8whsoJr28zF3',
+const priceMap = {
+    personal: 'price_1TpgWbKXJuMb8whsvCqD9huI',
     family: 'price_1TgnisKXJuMb8whsGlUi2E5t',
     annual: 'price_1Tgnj9KXJuMb8whsc1kTzmmT'
   };
