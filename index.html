@@ -627,7 +627,7 @@ async function subscribe(plan, cardEl) {
     }
   }
 
-  function checkUrlParams() {
+ function checkUrlParams() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('subscribed') === 'true') {
       try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
@@ -637,6 +637,29 @@ async function subscribe(plan, cardEl) {
       document.getElementById('cameraFrame').style.pointerEvents = 'auto';
       document.getElementById('controls').style.opacity = '1';
       document.getElementById('controls').style.pointerEvents = 'auto';
+
+      // Track referral code if present
+      const referralCode = params.get('ref');
+      const subscriberEmail = params.get('email') || '';
+      if (referralCode) {
+        fetch('/.netlify/functions/track-referral', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            referralCode: referralCode,
+            newSubscriberEmail: subscriberEmail
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Referral tracked:', data);
+          if (data.reward_triggered) {
+            console.log('🎉 Reward triggered for referrer!');
+          }
+        })
+        .catch(err => console.error('Referral tracking error:', err));
+      }
+
       window.history.replaceState({}, '', '/');
     }
   }
