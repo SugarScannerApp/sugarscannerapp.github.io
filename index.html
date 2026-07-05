@@ -638,7 +638,7 @@ async function subscribe(plan, cardEl) {
       document.getElementById('controls').style.opacity = '1';
       document.getElementById('controls').style.pointerEvents = 'auto';
 
-      // Track referral code if present
+    // Track referral code if present
       const referralCode = params.get('ref');
       const subscriberEmail = params.get('email') || '';
       if (referralCode) {
@@ -660,8 +660,41 @@ async function subscribe(plan, cardEl) {
         .catch(err => console.error('Referral tracking error:', err));
       }
 
+      // Generate referral code for new subscriber
+      // We use a small delay to ensure Stripe has processed the subscription
+      setTimeout(() => {
+        fetch('/.netlify/functions/generate-referral', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: subscriberEmail,
+            stripeCustomerId: ''
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.referral_code) {
+            console.log('Referral code generated:', data.referral_code);
+            // Show referral code in success banner
+            const banner = document.getElementById('successBanner');
+            if (banner) {
+              banner.innerHTML = `
+                🎉 Welcome to Sugar Scanner! Your subscription is active.<br>
+                <span style="font-size:13px;margin-top:6px;display:block;">
+                  Your referral code: <strong style="font-family:monospace;
+                  font-size:16px;letter-spacing:0.05em;">${data.referral_code}</strong>
+                  — Share it with friends! When 3 people subscribe you get
+                  3 months free. 
+                  <a href="/refer.html" style="color:var(--teal-dark);font-weight:700;">
+                  Track your referrals →</a>
+                </span>`;
+            }
+          }
+        })
+        .catch(err => console.error('Referral generation error:', err));
+      }, 1500);
+
       window.history.replaceState({}, '', '/');
-    }
   }
 
   function setStatus(msg) { document.getElementById('status').textContent = msg; }
