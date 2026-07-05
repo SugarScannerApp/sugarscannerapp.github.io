@@ -1,0 +1,9 @@
+{
+  "name": "sugar-scanner",
+  "version": "1.0.0",
+  "description": "Sugar Scanner App",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "stripe": "^14.0.0"
+  }
+}
