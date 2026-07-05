@@ -373,28 +373,22 @@
         .catch(function(err) { console.error('Referral tracking error:', err); });
       }
 
-      setTimeout(function() {
-        fetch('/.netlify/functions/generate-referral', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: subscriberEmail, stripeCustomerId: '' })
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (data.referral_code) {
-            const banner = document.getElementById('successBanner');
-            if (banner) {
-              banner.innerHTML = '🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>' +
-                '<span style="font-size:13px;margin-top:8px;display:block;background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">' +
-                '🌿 <strong>Your referral code: <span style="font-family:monospace;font-size:16px;letter-spacing:0.05em;">' +
-                data.referral_code + '</span></strong><br>' +
-                'Share it with friends — when 3 people subscribe using your code you get <strong>3 months free!</strong><br>' +
-                '<a href="/refer.html" style="color:var(--teal-dark);font-weight:700;text-decoration:underline;">Track your referrals →</a>' +
-                '</span>';
-            }
-          }
-        })
-        .catch(function(err) { console.error('Referral generation error:', err); });
+  setTimeout(function() {
+        const banner = document.getElementById('successBanner');
+        if (banner) {
+          banner.innerHTML = '🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>' +
+            '<span style="font-size:13px;margin-top:8px;display:block;background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">' +
+            '🌿 <strong>Get your referral code!</strong><br>' +
+            'Share Sugar Scanner with friends — when 3 people subscribe using your code you get <strong>3 months free!</strong><br><br>' +
+            '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">' +
+            '<input type="email" id="referralEmailInput" placeholder="Enter your email address" ' +
+            'style="flex:1;min-width:200px;padding:8px 12px;border:0.5px solid rgba(29,158,117,0.4);border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:#1a1a18;" />' +
+            '<button onclick="generateReferralCode()" ' +
+            'style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Get my code</button>' +
+            '</div>' +
+            '<div id="referralCodeResult" style="margin-top:8px;"></div>' +
+            '</span>';
+        }
       }, 1500);
 
       window.history.replaceState({}, '', '/');
