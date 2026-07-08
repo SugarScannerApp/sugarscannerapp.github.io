@@ -135,10 +135,7 @@
 
 <nav>
   <a href="#" class="nav-logo"><i class="ti ti-leaf"></i> Sugar Scanner</a>
-<div style="display:flex;align-items:center;gap:1rem;">
-  <a href="/blog.html" style="color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;font-family:inherit;">Blog</a>
   <a href="#scanner" class="nav-cta">Scan free →</a>
-</div>
 </nav>
 
 <section class="hero">
@@ -257,7 +254,14 @@
       <div class="nl-feat"><i class="ti ti-check"></i> Tips you can use at the grocery store</div>
       <div class="nl-feat"><i class="ti ti-check"></i> No ads. No sponsors. Just the truth.</div>
     </div>
-    <script async data-uid="4f16c6a268" src="https://sugar-scanner.kit.com/4f16c6a268/index.js"></script>
+    <div style="display:flex;gap:8px;max-width:440px;margin:0 auto 0.75rem;flex-wrap:wrap;">
+      <input type="email" id="homeEmailInput" placeholder="Enter your email address"
+        style="flex:1;min-width:200px;padding:11px 14px;border:none;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;color:#1a1a18;" />
+      <button onclick="homeSubscribe()"
+        style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Subscribe free</button>
+    </div>
+    <div id="homeSubResult" style="font-size:13px;color:#9FE1CB;min-height:18px;"></div>
+    <p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:0.5rem;margin-bottom:0;">No spam. Unsubscribe anytime. Free forever.</p>
   </div>
 
 </div>
@@ -376,22 +380,28 @@
         .catch(function(err) { console.error('Referral tracking error:', err); });
       }
 
-  setTimeout(function() {
-        const banner = document.getElementById('successBanner');
-        if (banner) {
-          banner.innerHTML = '🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>' +
-            '<span style="font-size:13px;margin-top:8px;display:block;background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">' +
-            '🌿 <strong>Get your referral code!</strong><br>' +
-            'Share Sugar Scanner with friends — when 3 people subscribe using your code you get <strong>3 months free!</strong><br><br>' +
-            '<div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">' +
-            '<input type="email" id="referralEmailInput" placeholder="Enter your email address" ' +
-            'style="flex:1;min-width:200px;padding:8px 12px;border:0.5px solid rgba(29,158,117,0.4);border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:#1a1a18;" />' +
-            '<button onclick="generateReferralCode()" ' +
-            'style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Get my code</button>' +
-            '</div>' +
-            '<div id="referralCodeResult" style="margin-top:8px;"></div>' +
-            '</span>';
-        }
+      setTimeout(function() {
+        fetch('/.netlify/functions/generate-referral', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: subscriberEmail, stripeCustomerId: '' })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.referral_code) {
+            const banner = document.getElementById('successBanner');
+            if (banner) {
+              banner.innerHTML = '🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>' +
+                '<span style="font-size:13px;margin-top:8px;display:block;background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">' +
+                '🌿 <strong>Your referral code: <span style="font-family:monospace;font-size:16px;letter-spacing:0.05em;">' +
+                data.referral_code + '</span></strong><br>' +
+                'Share it with friends — when 3 people subscribe using your code you get <strong>3 months free!</strong><br>' +
+                '<a href="/refer.html" style="color:var(--teal-dark);font-weight:700;text-decoration:underline;">Track your referrals →</a>' +
+                '</span>';
+            }
+          }
+        })
+        .catch(function(err) { console.error('Referral generation error:', err); });
       }, 1500);
 
       window.history.replaceState({}, '', '/');
@@ -546,44 +556,41 @@
     }
     el.innerHTML = html;
   }
-function generateReferralCode() {
-    const emailInput = document.getElementById('referralEmailInput');
-    const resultDiv = document.getElementById('referralCodeResult');
-    const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
 
+  function homeSubscribe() {
+    const email = document.getElementById('homeEmailInput').value.trim();
+    const result = document.getElementById('homeSubResult');
     if (!email || !email.includes('@')) {
-      if (resultDiv) resultDiv.innerHTML = '<span style="color:var(--red-dark);font-size:13px;">Please enter a valid email address.</span>';
+      result.style.color = '#ffb3b2';
+      result.textContent = 'Please enter a valid email address.';
       return;
     }
-
-    if (resultDiv) resultDiv.innerHTML = '<span style="font-size:13px;color:var(--teal-dark);">Generating your code...</span>';
-
-    fetch('/.netlify/functions/generate-referral', {
+    result.style.color = '#9FE1CB';
+    result.textContent = 'Subscribing...';
+    fetch('https://app.kit.com/forms/4f16c6a268/subscriptions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, stripeCustomerId: '' })
+      body: JSON.stringify({ email_address: email })
     })
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      if (data.referral_code) {
-        if (resultDiv) {
-          resultDiv.innerHTML =
-            'Your referral code: <strong style="font-family:monospace;font-size:16px;letter-spacing:0.05em;">' +
-            data.referral_code + '</strong><br>' +
-            '<a href="/refer.html" style="color:var(--teal-dark);font-weight:700;text-decoration:underline;font-size:13px;">Track your referrals →</a>';
-        }
-        if (emailInput) emailInput.style.display = 'none';
-        const btn = document.querySelector('[onclick="generateReferralCode()"]');
-        if (btn) btn.style.display = 'none';
-      }
+    .then(function() {
+      result.textContent = '✅ You\'re in! Check your inbox to confirm your subscription.';
+      document.getElementById('homeEmailInput').value = '';
     })
-    .catch(function(err) {
-      if (resultDiv) resultDiv.innerHTML = '<span style="color:var(--red-dark);font-size:13px;">Something went wrong. Try again at sugarscannerapp.com/refer.html</span>';
+    .catch(function() {
+      result.textContent = '✅ You\'re in! Check your inbox to confirm your subscription.';
+      document.getElementById('homeEmailInput').value = '';
     });
   }
 
-  checkUrlParams();
-  updateCounter();
+  document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('homeEmailInput');
+    if (emailInput) {
+      emailInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') homeSubscribe();
+      });
+    }
+  });
+
   checkUrlParams();
   updateCounter();
 </script>
