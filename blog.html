@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-03EVSYN1FT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-03EVSYN1FT');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sugar Scanner Blog — Hidden Sugar Education & Label Reading Guides</title>
+  <meta name="description" content="Learn what's really hiding in your food. Expert guides on hidden sugars, ingredient label reading, glycemic index, and metabolic health from a NASM Certified Nutrition Coach." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.9.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f9f9f7; --surface: #ffffff; --border: rgba(0,0,0,0.10);
+      --border-md: rgba(0,0,0,0.20); --text-primary: #1a1a18; --text-secondary: #5f5e5a;
+      --teal: #1D9E75; --teal-dark: #0F6E56; --teal-light: #E1F5EE; --navy: #04342C;
+      --red: #E24B4A; --red-dark: #A32D2D; --red-light: #FCEBEB;
+      --green-light: #EAF3DE; --green-text: #3B6D11;
+      --radius-md: 8px; --radius-lg: 14px; --radius-xl: 22px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0d1f1a; --surface: #142018; --border: rgba(255,255,255,0.08);
+        --border-md: rgba(255,255,255,0.16); --text-primary: #f0ede8; --text-secondary: #9FE1CB;
+        --teal-light: #0a2e1a; --green-light: #173404; --green-text: #C0DD97;
+        --red-light: #501313; }
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text-primary); }
+    nav { background: var(--navy); padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 52px; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { display: flex; align-items: center; gap: 7px; font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; }
+    .nav-logo i { color: #9FE1CB; font-size: 18px; }
+    .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+    .nav-link { color: rgba(255,255,255,0.7); font-size: 13px; text-decoration: none; transition: color 0.15s; }
+    .nav-link:hover { color: #fff; }
+    .nav-cta { background: var(--teal); color: #fff; border: none; border-radius: var(--radius-md); padding: 7px 16px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+    .nav-cta:hover { background: var(--teal-dark); }
+    .hero { background: linear-gradient(160deg, var(--navy) 0%, #0F6E56 100%); padding: 3rem 1.25rem 2.5rem; text-align: center; color: #fff; }
+    .hero-eyebrow { display: inline-block; background: rgba(159,225,203,0.15); border: 0.5px solid rgba(159,225,203,0.3); border-radius: 999px; padding: 4px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #9FE1CB; margin-bottom: 1rem; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(24px, 5vw, 40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 0.75rem; }
+    .hero p { font-size: 15px; color: rgba(255,255,255,0.72); max-width: 480px; margin: 0 auto; line-height: 1.65; }
+    .main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1.25rem; }
+    .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 3rem; }
+    .post-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; text-decoration: none; color: var(--text-primary); transition: transform 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; }
+    .post-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .post-category { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.625rem; }
+    .post-title { font-size: 17px; font-weight: 800; line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 0.625rem; }
+    .post-excerpt { font-size: 13px; color: var(--text-secondary); line-height: 1.65; flex: 1; }
+    .post-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; padding-top: 0.875rem; border-top: 0.5px solid var(--border); }
+    .post-date { font-size: 11px; color: var(--text-secondary); }
+    .post-read { font-size: 11px; color: var(--teal); font-weight: 600; }
+    .post-card.featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; background: var(--navy); color: #fff; border-color: transparent; }
+    @media (max-width: 580px) { .post-card.featured { grid-template-columns: 1fr; } }
+    .post-card.featured .post-category { color: #9FE1CB; }
+    .post-card.featured .post-title { font-size: 22px; color: #fff; }
+    .post-card.featured .post-excerpt { color: rgba(255,255,255,0.7); font-size: 14px; }
+    .post-card.featured .post-date { color: rgba(255,255,255,0.45); }
+    .post-card.featured .post-read { color: #9FE1CB; }
+    .post-card.featured .post-meta { border-top-color: rgba(255,255,255,0.1); }
+    .featured-badge { display: inline-block; background: var(--teal); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; margin-bottom: 0.75rem; }
+    .featured-visual { background: rgba(29,158,117,0.15); border-radius: var(--radius-lg); padding: 2rem; text-align: center; }
+    .featured-stat { font-size: 52px; font-weight: 800; color: #9FE1CB; line-height: 1; }
+    .featured-stat-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 6px; }
+    .newsletter-strip { background: var(--teal-light); border: 0.5px solid var(--teal); border-radius: var(--radius-xl); padding: 2rem; text-align: center; margin-bottom: 3rem; }
+    .newsletter-strip h2 { font-size: 20px; font-weight: 800; margin-bottom: 0.5rem; color: var(--navy); }
+    .newsletter-strip p { font-size: 14px; color: var(--teal-dark); margin-bottom: 1.25rem; }
+    .scan-cta { background: var(--navy); border-radius: var(--radius-xl); padding: 2rem; text-align: center; color: #fff; }
+    .scan-cta h2 { font-size: 20px; font-weight: 800; margin-bottom: 0.5rem; }
+    .scan-cta p { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 1.25rem; }
+    .btn-scan { display: inline-block; background: #fff; color: var(--navy); border-radius: var(--radius-md); padding: 12px 28px; font-size: 15px; font-weight: 700; text-decoration: none; transition: transform 0.15s; }
+    .btn-scan:hover { transform: translateY(-2px); }
+    footer { background: var(--navy); color: rgba(255,255,255,0.4); text-align: center; padding: 1.5rem; font-size: 12px; line-height: 1.85; }
+    footer a { color: #9FE1CB; text-decoration: none; }
+    .footer-logo { font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px; }
+    .footer-logo i { color: #9FE1CB; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo"><i class="ti ti-leaf"></i> Sugar Scanner</a>
+  <div class="nav-links">
+    <a href="/blog.html" class="nav-link">Blog</a>
+    <a href="/#newsletter" class="nav-link">Newsletter</a>
+    <a href="/" class="nav-cta">Scan free →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">🌿 Hidden Sugar Education</div>
+  <h1>Know what's really in your food</h1>
+  <p>Expert guides on hidden sugars, ingredient label reading, glycemic index, and metabolic health — from a NASM Certified Nutrition Coach.</p>
+</section>
+
+<div class="main">
+
+  <!-- FEATURED POST -->
+  <div class="section-label">Featured</div>
+  <a href="/blog/what-is-maltodextrin.html" class="post-card featured">
+    <div>
+      <div class="featured-badge">Must Read</div>
+      <div class="post-category">Ingredient Deep Dive</div>
+      <div class="post-title">What is Maltodextrin — and Why It Has a Higher GI Than Sugar</div>
+      <div class="post-excerpt">It doesn't appear in the sugar total on nutrition labels. It's classified as a carbohydrate. Most people have never heard of it. And it has a glycemic index higher than pure glucose.</div>
+      <div class="post-meta">
+        <span class="post-date">July 8, 2026</span>
+        <span class="post-read">5 min read →</span>
+      </div>
+    </div>
+    <div class="featured-visual">
+      <div class="featured-stat">GI 105</div>
+      <div class="featured-stat-label">Maltodextrin's glycemic index<br>Table sugar is only 65</div>
+    </div>
+  </a>
+
+  <!-- ALL POSTS -->
+  <div class="section-label" style="margin-top:2.5rem;">All Articles</div>
+  <div class="posts-grid">
+
+    <a href="/blog/what-is-maltodextrin.html" class="post-card">
+      <div class="post-category">Ingredient Deep Dive</div>
+      <div class="post-title">What is Maltodextrin — and Why It Has a Higher GI Than Sugar</div>
+      <div class="post-excerpt">It's in hundreds of health products and doesn't count as sugar on nutrition labels. Here's what it actually does to your blood sugar.</div>
+      <div class="post-meta">
+        <span class="post-date">Jul 8, 2026</span>
+        <span class="post-read">5 min →</span>
+      </div>
+    </a>
+
+    <a href="/blog/60-names-for-sugar.html" class="post-card">
+      <div class="post-category">Label Reading</div>
+      <div class="post-title">60+ Names for Sugar on Ingredient Labels</div>
+      <div class="post-excerpt">Most people scan labels looking for the word sugar. The food industry knows this. Here are all the names they use instead.</div>
+      <div class="post-meta">
+        <span class="post-date">Coming soon</span>
+        <span class="post-read">6 min →</span>
+      </div>
+    </a>
+
+    <a href="/blog/what-is-ggt-blood-test.html" class="post-card">
+      <div class="post-category">Liver Health</div>
+      <div class="post-title">What Your GGT Blood Test Actually Measures — and Why It Matters</div>
+      <div class="post-excerpt">GGT is one of the most sensitive markers for hidden sugar damage. Here's what it measures, what elevated GGT means, and why doctors often dismiss it.</div>
+      <div class="post-meta">
+        <span class="post-date">Coming soon</span>
+        <span class="post-read">7 min →</span>
+      </div>
+    </a>
+
+    <a href="/blog/is-brown-rice-syrup-healthy.html" class="post-card">
+      <div class="post-category">Ingredient Deep Dive</div>
+      <div class="post-title">Is Brown Rice Syrup Healthy? The Truth About GI 98</div>
+      <div class="post-excerpt">It sounds wholesome. It says organic on the label. Its glycemic index of 98 is nearly identical to pure glucose. Here's the full story.</div>
+      <div class="post-meta">
+        <span class="post-date">Coming soon</span>
+        <span class="post-read">5 min →</span>
+      </div>
+    </a>
+
+    <a href="/blog/sugar-free-vs-no-added-sugar.html" class="post-card">
+      <div class="post-category">Label Reading</div>
+      <div class="post-title">Sugar Free vs No Added Sugar — What's the Real Difference?</div>
+      <div class="post-excerpt">Both claims are regulated. Neither means what most people think. Here's exactly what each one means — and what it doesn't.</div>
+      <div class="post-meta">
+        <span class="post-date">Coming soon</span>
+        <span class="post-read">4 min →</span>
+      </div>
+    </a>
+
+    <a href="/blog/fructose-and-liver-health.html" class="post-card">
+      <div class="post-category">Liver Health</div>
+      <div class="post-title">What Fructose Does to Your Liver — The Science Explained</div>
+      <div class="post-excerpt">Fructose has a GI of 19. It looks safe on paper. Here's what's actually happening in your liver when you consume it — and why it's in almost every packaged food.</div>
+      <div class="post-meta">
+        <span class="post-date">Coming soon</span>
+        <span class="post-read">8 min →</span>
+      </div>
+    </a>
+
+    <a href="/blog/heather-mckenzie-story.html" class="post-card">
+      <div class="post-category">Founder Story</div>
+      <div class="post-title">17 Years of Pain. GGT of 120. One Discovery Changed Everything.</div>
+      <div class="post-excerpt">For 17 years I had unexplained liver pain that doctors couldn't explain. Here's the full story of how hidden sugars were the answer — and why I built Sugar Scanner.</div>
+      <div class="post-meta">
+        <span class="post-date">Coming soon</span>
+        <span class="post-read">10 min →</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter-strip">
+    <h2>🌿 The Hidden Sugar Weekly</h2>
+    <p>Every Tuesday — one popular food scanned, every hidden sugar revealed. Free forever.</p>
+    <script async data-uid="4f16c6a268" src="https://sugar-scanner.kit.com/4f16c6a268/index.js"></script>
+  </div>
+
+  <!-- SCAN CTA -->
+  <div class="scan-cta">
+    <h2>Ready to scan your own labels?</h2>
+    <p>No download needed. Works on any phone. First 3 scans completely free.</p>
+    <a href="/" class="btn-scan">🔍 Scan a label free</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo"><i class="ti ti-leaf"></i> Sugar Scanner</div>
+  <p>Built by Heather McKenzie · NASM Certified Nutrition Coach · Behavior Change Specialist</p>
+  <p><a href="mailto:heather@sugarscannerapp.com">heather@sugarscannerapp.com</a> · <a href="https://billing.stripe.com/p/login/00wdRa0v4eEq8zT1Cb2Nq00">Manage subscription</a></p>
+  <p style="margin-top:6px;">© 2026 Sugar Scanner LLC · Oregon · All rights reserved</p>
+</footer>
+
+</body>
+</html>
