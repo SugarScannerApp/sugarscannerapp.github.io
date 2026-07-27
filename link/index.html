@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sugar Scanner — Links</title>
+<meta name="description" content="Scan your first label, join The Hidden Sugar Weekly, and catch the latest from Sugar Scanner.">
+<!-- ============================================================
+  GA4: reuses the Sugar Scanner property (G-03EVSYN1FT).
+  Every link click below fires a 'link_click' event with the
+  link's label, so you can see which one earns its spot in GA4
+  under Reports > Engagement > Events.
+============================================================= -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-03EVSYN1FT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-03EVSYN1FT');
+  function trackClick(label) {
+    gtag('event', 'link_click', { link_label: label });
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F1F2EC;
+    --ink: #15181A;
+    --line: #15181A;
+    --highlight: #DFFF4F;
+    --alert: #C1401E;
+    --muted: #6B6F68;
+    --card: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  .panel {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 3px solid var(--line);
+    padding: 20px 20px 24px;
+    overflow: hidden;
+  }
+  .scan {
+    position: absolute;
+    left: 0; right: 0;
+    height: 40px;
+    top: -40px;
+    background: linear-gradient(180deg, rgba(223,255,79,0) 0%, rgba(223,255,79,0.85) 50%, rgba(223,255,79,0) 100%);
+    animation: sweep 1.6s ease-in-out 0.15s 1;
+    pointer-events: none;
+  }
+  @keyframes sweep {
+    0%   { top: -40px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+  .eyebrow {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    border-bottom: 8px solid var(--line);
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+  }
+  .subline {
+    font-size: 11px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+    letter-spacing: 0.4px;
+  }
+  .avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0 18px;
+    border-bottom: 4px solid var(--line);
+  }
+  .avatar {
+    width: 52px; height: 52px;
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 20px;
+    background: var(--highlight);
+    flex-shrink: 0;
+  }
+  .avatar-text .name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+  }
+  .avatar-text .tag {
+    font-size: 10.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .links {
+    margin-top: 6px;
+  }
+  .link-row {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 14px 4px;
+    border-bottom: 1px solid #D8D8CE;
+    transition: background 0.15s ease, padding-left 0.15s ease;
+    position: relative;
+  }
+  .link-row:last-child { border-bottom: none; }
+  .link-row:hover,
+  .link-row:focus-visible {
+    background: var(--highlight);
+    padding-left: 10px;
+  }
+  .link-row:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+  .link-row.primary {
+    border: 2px solid var(--line);
+    background: var(--ink);
+    color: var(--paper);
+    margin-bottom: 10px;
+    padding: 16px 12px;
+  }
+  .link-row.primary:hover,
+  .link-row.primary:focus-visible {
+    background: var(--alert);
+    color: #fff;
+    padding-left: 16px;
+  }
+  .row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14.5px;
+    letter-spacing: -0.1px;
+  }
+  .row-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .primary .row-desc { color: #D8D8CE; }
+  .arrow { font-size: 15px; }
+  .footer {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 8px solid var(--line);
+    font-size: 9.5px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .footer strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="scan"></div>
+  <div class="eyebrow">SUGAR SCANNER</div>
+  <div class="subline">SERVING SIZE: 1 TAP &nbsp;·&nbsp; SERVINGS PER BIO: 4</div>
+  <div class="avatar-row">
+    <div class="avatar">SS</div>
+    <div class="avatar-text">
+      <div class="name">@sugarscanner</div>
+      <div class="tag">Hidden sugars, exposed one label at a time.</div>
+    </div>
+  </div>
+  <div class="links">
+    <a class="link-row primary" href="https://sugarscannerapp.com" target="_blank" rel="noopener" onclick="trackClick('scan_a_label')">
+      <div class="row-top">
+        <span>SCAN A LABEL — FREE</span>
+        <span class="arrow">→</span>
+      </div>
+      <div class="row-desc">No download. Photograph any ingredient list, see what's really in it.</div>
+    </a>
+    <a class="link-row" href="https://sugar-scanner.kit.com/4f16c6a268" target="_blank" rel="noopener" onclick="trackClick('newsletter_signup')">
+      <div class="row-top">
+        <span>THE HIDDEN SUGAR WEEKLY</span>
+        <span class="arrow">→</span>
+      </div>
+      <div class="row-desc">One email, every Tuesday. The names sugar hides behind, decoded.</div>
+    </a>
+    <a class="link-row" href="https://www.youtube.com/channel/UC3KWZdiT3iocmVrCs3hXtyA" target="_blank" rel="noopener" onclick="trackClick('latest_video')">
+      <div class="row-top">
+        <span>LATEST VIDEO</span>
+        <span class="arrow">→</span>
+      </div>
+      <div class="row-desc">The Glycemic Index Lie — full deep dive.</div>
+    </a>
+    <a class="link-row" href="https://sugarscannerapp.com/blog" target="_blank" rel="noopener" onclick="trackClick('blog')">
+      <div class="row-top">
+        <span>READ THE BLOG</span>
+        <span class="arrow">→</span>
+      </div>
+      <div class="row-desc">Maltodextrin, corn syrup solids, and what your labels aren't saying.</div>
+    </a>
+  </div>
+  <div class="footer">
+    <strong>INGREDIENTS:</strong> real label data, zero affiliate links, one founder who read the fine print so you don't have to.
+  </div>
+</div>
+</body>
+</html>
