@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+<channel>
+  <title>Sugar Scanner Blog</title>
+  <link>https://sugarscannerapp.com/blog</link>
+  <description>Hidden sugars, exposed one label at a time. Ingredient deep dives, glycemic index breakdowns, and label-reading guides from Sugar Scanner.</description>
+  <language>en-us</language>
+
+  <item>
+    <title>What Does High GGT Mean? Liver Enzyme Explained</title>
+    <link>https://sugarscannerapp.com/blog/what-does-ggt-mean.html</link>
+    <guid>https://sugarscannerapp.com/blog/what-does-ggt-mean.html</guid>
+    <description>GGT is a liver enzyme test. Learn what a high result means, the normal range, and one woman's story of bringing her GGT from 120 down to 15.4 through diet.</description>
+    <pubDate>Tue, 15 Jul 2026 08:00:00 GMT</pubDate>
+    <enclosure url="https://sugarscannerapp.com/pins/pin-ggt.jpg" type="image/jpeg" />
+    <media:content url="https://sugarscannerapp.com/pins/pin-ggt.jpg" medium="image" />
+  </item>
+
+  <item>
+    <title>What Are Corn Syrup Solids in Your Coffee Creamer?</title>
+    <link>https://sugarscannerapp.com/blog/what-are-corn-syrup-solids.html</link>
+    <guid>https://sugarscannerapp.com/blog/what-are-corn-syrup-solids.html</guid>
+    <description>Corn syrup solids are the primary sweetener in most popular coffee creamers, with a glycemic index over 75. Here's what they are and what they do to your blood sugar every morning.</description>
+    <pubDate>Wed, 15 Jul 2026 08:00:00 GMT</pubDate>
+    <enclosure url="https://sugarscannerapp.com/pins/pin-corn-syrup-solids.jpg" type="image/jpeg" />
+    <media:content url="https://sugarscannerapp.com/pins/pin-corn-syrup-solids.jpg" medium="image" />
+  </item>
+
+  <item>
+    <title>What is Maltodextrin — and Why It Has a Higher GI Than Sugar</title>
+    <link>https://sugarscannerapp.com/blog/what-is-maltodextrin</link>
+    <guid>https://sugarscannerapp.com/blog/what-is-maltodextrin</guid>
+    <description>Maltodextrin is in most "sugar free" protein powders and snacks, but its glycemic index is often higher than table sugar. Here's what it is and why it matters for blood sugar.</description>
+    <pubDate>Wed, 08 Jul 2026 08:00:00 GMT</pubDate>
+    <enclosure url="https://sugarscannerapp.com/pins/pin-maltodextrin.jpg" type="image/jpeg" />
+    <media:content url="https://sugarscannerapp.com/pins/pin-maltodextrin.jpg" medium="image" />
+  </item>
+
+  <item>
+    <title>What is Maltitol and Why It Causes Digestive Issues</title>
+    <link>https://sugarscannerapp.com/blog/what-is-maltitol</link>
+    <guid>https://sugarscannerapp.com/blog/what-is-maltitol</guid>
+    <description>Maltitol is common in sugar-free candy and chocolate. It still impacts blood sugar and is a leading cause of bloating and digestive discomfort from "diet" sweets.</description>
+    <pubDate>Wed, 01 Jul 2026 08:00:00 GMT</pubDate>
+    <enclosure url="https://sugarscannerapp.com/pins/pin-maltitol.jpg" type="image/jpeg" />
+    <media:content url="https://sugarscannerapp.com/pins/pin-maltitol.jpg" medium="image" />
+  </item>
+
+  <item>
+    <title>60+ Names for Sugar on Ingredient Labels — Free Cheat Sheet</title>
+    <link>https://sugarscannerapp.com/#newsletter</link>
+    <guid>https://sugarscannerapp.com/blog/60-names-for-sugar.html</guid>
+    <description>Sugar hides under dozens of names on ingredient labels, from dextrose to brown rice syrup. Get the free printable cheat sheet to spot every one of them at the grocery store.</description>
+    <pubDate>Wed, 24 Jun 2026 08:00:00 GMT</pubDate>
+    <enclosure url="https://sugarscannerapp.com/pins/pin-60-names-cheatsheet.jpg" type="image/jpeg" />
+    <media:content url="https://sugarscannerapp.com/pins/pin-60-names-cheatsheet.jpg" medium="image" />
+  </item>
+
+</channel>
+</rss>
