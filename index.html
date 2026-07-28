@@ -218,6 +218,10 @@
           <div class="plan-loading" id="annualLoading">Loading...</div>
         </div>
       </div>
+      <div style="border-top: 1px solid var(--border); margin: 0.875rem 0; padding-top: 0.875rem; text-align: center;">
+        <p style="font-size:13px; color:var(--text-secondary);">Not ready to subscribe? <strong>Get free label breakdowns delivered weekly instead</strong> — no scanning required.</p>
+        <a href="#newsletter" style="color:var(--teal-dark); font-weight:700; font-size:13px; text-decoration:underline;">Join the newsletter →</a>
+      </div>
       <div class="paywall-footer-note">
         Nutrition coach? <a href="/coaches">Get your own branded version →</a>
       </div>
@@ -266,6 +270,7 @@
       <div class="nl-feat"><i class="ti ti-check"></i> Tips you can use at the grocery store</div>
       <div class="nl-feat"><i class="ti ti-check"></i> No ads. No sponsors. Just the truth.</div>
     </div>
+    <p style="font-size:13px; color:#9FE1CB; font-weight:700; margin-bottom:0.5rem;">📄 Subscribe now and get the free "60+ Names for Sugar" cheat sheet instantly</p>
     <div style="display:flex;gap:8px;max-width:440px;margin:0 auto 0.75rem;flex-wrap:wrap;">
       <input type="email" id="homeEmailInput" placeholder="Enter your email address"
         style="flex:1;min-width:200px;padding:11px 14px;border:none;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;color:#1a1a18;" />
@@ -566,6 +571,7 @@
           '<div class="sugar-detail"><strong>How it\'s processed:</strong> ' + (s.how_processed || '') + '</div></div>';
       });
     }
+    html += '<div class="result-card" style="text-align:center; border-left: none;"><p style="font-size:14px; font-weight:700; margin-bottom:4px;">🌿 Want a breakdown like this every week?</p><p style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">Get a new "healthy" product scanned and exposed every Tuesday — free.</p><a href="#newsletter" style="background:var(--teal); color:#fff; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-block;">Subscribe free →</a></div>';
     el.innerHTML = html;
   }
 
@@ -585,11 +591,11 @@
       body: JSON.stringify({ email_address: email })
     })
     .then(function() {
-      result.textContent = '✅ You\'re in! Check your inbox to confirm your subscription.';
+      result.innerHTML = '✅ You\'re in! Check your inbox to confirm — and <a href="/downloads/60-names-for-sugar.pdf" target="_blank" style="color:#9FE1CB;text-decoration:underline;">download your cheat sheet here</a>.';
       document.getElementById('homeEmailInput').value = '';
     })
     .catch(function() {
-      result.textContent = '✅ You\'re in! Check your inbox to confirm your subscription.';
+      result.innerHTML = '✅ You\'re in! Check your inbox to confirm — and <a href="/downloads/60-names-for-sugar.pdf" target="_blank" style="color:#9FE1CB;text-decoration:underline;">download your cheat sheet here</a>.';
       document.getElementById('homeEmailInput').value = '';
     });
   }
