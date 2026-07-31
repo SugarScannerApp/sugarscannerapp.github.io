@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /content/queued/
+
+Sitemap: https://sugarscannerapp.com/sitemap.xml
