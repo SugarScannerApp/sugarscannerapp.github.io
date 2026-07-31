@@ -8,22 +8,6 @@
 <atom:link href="https://sugarscannerapp.com/rss.xml" rel="self" type="application/rss+xml" />
 
 <item>
-<title>[TEST] Automation Pipeline Check — Post Beta</title>
-<link>https://sugarscannerapp.com/blog/zz-test-post-beta.html</link>
-<guid>https://sugarscannerapp.com/blog/zz-test-post-beta.html</guid>
-<description>Second throwaway post used to confirm the queue advances correctly after the first publish.</description>
-<pubDate>Fri, 31 Jul 2026 08:00:00 GMT</pubDate>
-</item>
-
-<item>
-<title>[TEST] Automation Pipeline Check — Post Alpha</title>
-<link>https://sugarscannerapp.com/blog/zz-test-post-alpha.html</link>
-<guid>https://sugarscannerapp.com/blog/zz-test-post-alpha.html</guid>
-<description>Throwaway post used to verify the scheduled-publish pipeline end-to-end. Safe to ignore — will be removed after testing.</description>
-<pubDate>Fri, 31 Jul 2026 08:00:00 GMT</pubDate>
-</item>
-
-<item>
 <title>What Does High GGT Mean? Liver Enzyme Explained</title>
 <link>https://sugarscannerapp.com/blog/what-does-ggt-mean.html</link>
 <guid>https://sugarscannerapp.com/blog/what-does-ggt-mean.html</guid>
