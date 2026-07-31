@@ -1,12 +1,3 @@
 {
-  "queue": [
-    {
-      "slug": "zz-test-post-beta.html",
-      "title": "[TEST] Automation Pipeline Check \u2014 Post Beta",
-      "category": "Test",
-      "excerpt": "Second throwaway post used to confirm the queue advances correctly after the first publish.",
-      "readTime": "1 min",
-      "pinImage": null
-    }
-  ]
+  "queue": []
 }
