@@ -1,0 +1,66 @@
+name: Publish Queued Blog Post
+
+# --- Scheduling notes ---
+# Target: Wednesdays, 8:00 AM Pacific (matches the existing weekly content
+# calendar). GitHub Actions cron is UTC-only and does not shift for daylight
+# saving, so instead of a single fixed UTC hour (which would drift an hour
+# twice a year), this runs hourly across a window that safely covers 8am
+# Pacific under both PST (UTC-8) and PDT (UTC-7), and the job itself checks
+# the real Pacific wall-clock time and skips unless it's actually 8am. That
+# makes the schedule correct year-round without manual adjustment.
+#
+# Manual runs (workflow_dispatch, e.g. for testing) always bypass the hour
+# gate and run immediately.
+on:
+  schedule:
+    - cron: '0 14-17 * * 3'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gate on 8am Pacific for scheduled runs
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manually triggered — skipping time gate."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          HOUR=$(TZ='America/Los_Angeles' date +%H)
+          echo "Current Pacific hour: $HOUR"
+          if [ "$HOUR" = "08" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Not 8am Pacific yet this hour ($HOUR:00 Pacific) — skipping. This is expected; another hourly run this same Wednesday will catch 8am."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Python
+        if: steps.gate.outputs.proceed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Publish next queued post (if any)
+        if: steps.gate.outputs.proceed == 'true'
+        id: publish
+        run: python3 .github/scripts/publish_queued_post.py
+
+      - name: Commit and push
+        if: steps.gate.outputs.proceed == 'true' && steps.publish.outputs.published == 'true'
+        run: |
+          git config user.name "sugar-scanner-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Auto-publish: ${{ steps.publish.outputs.title }}"
+          git push
