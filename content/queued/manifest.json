@@ -1,0 +1,20 @@
+{
+  "queue": [
+    {
+      "slug": "zz-test-post-alpha.html",
+      "title": "[TEST] Automation Pipeline Check — Post Alpha",
+      "category": "Test",
+      "excerpt": "Throwaway post used to verify the scheduled-publish pipeline end-to-end. Safe to ignore — will be removed after testing.",
+      "readTime": "1 min",
+      "pinImage": null
+    },
+    {
+      "slug": "zz-test-post-beta.html",
+      "title": "[TEST] Automation Pipeline Check — Post Beta",
+      "category": "Test",
+      "excerpt": "Second throwaway post used to confirm the queue advances correctly after the first publish.",
+      "readTime": "1 min",
+      "pinImage": null
+    }
+  ]
+}
