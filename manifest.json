@@ -1,0 +1,16 @@
+{
+    "name": "Sugar Scanner",
+    "short_name": "Sugar Scanner",
+    "description": "Snap or upload an ingredient label to find hidden sugars, additives, and glycemic index data.",
+    "start_url": "/?source=pwa",
+    "id": "/?source=pwa",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0B6E4F",
+    "orientation": "portrait",
+    "icons": [
+          { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+          { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+          { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}
