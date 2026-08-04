@@ -1,3 +1,12 @@
 {
-  "queue": []
+  "queue": [
+    {
+      "slug": "fructose-and-liver-health.html",
+      "title": "What Fructose Does to Your Liver — The Science Explained",
+      "category": "Liver Health",
+      "excerpt": "Fructose has a GI of 19. It looks safe on paper. Here's what's actually happening in your liver when you consume it — and why it's in almost every packaged food.",
+      "readTime": "8 min",
+      "pinImage": null
+    }
+  ]
 }
