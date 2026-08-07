@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Sugar Scanner App",
   "dependencies": {
+        "@netlify/blobs": "^10.7.12",
     "@supabase/supabase-js": "2.39.0",
     "stripe": "14.0.0"
   },
