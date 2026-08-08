@@ -299,6 +299,21 @@
   const SUBSCRIBED_KEY = 'sugar_scanner_subscribed';
   let stream = null, capturedB64 = null, capturedMediaType = 'image/jpeg';
 
+  const ANON_TOKEN_KEY = 'sugar_scanner_anon_token';
+  const ACCESS_TOKEN_KEY = 'sugar_scanner_access_token'; // reserved for the signed paid-access token issued by PR #2's restore-access / verify-checkout-session flow
+
+  function getAnonToken() {
+    try { return localStorage.getItem(ANON_TOKEN_KEY) || ''; } catch(e) { return ''; }
+  }
+
+  function setAnonToken(token) {
+    try { if (token) localStorage.setItem(ANON_TOKEN_KEY, token); } catch(e) {}
+  }
+
+  function getAccessToken() {
+    try { return localStorage.getItem(ACCESS_TOKEN_KEY) || ''; } catch(e) { return ''; }
+  }
+
   function isSubscribed() {
     try { return localStorage.getItem(SUBSCRIBED_KEY) === 'true'; } catch(e) { return false; }
   }
@@ -514,22 +529,38 @@
     document.getElementById('results').innerHTML = '';
     setControls('');
     setStatus('');
+    let blockedByServer = false;
     try {
+      const reqHeaders = { 'Content-Type': 'application/json' };
+      const anonToken = getAnonToken();
+      if (anonToken) reqHeaders['X-Anon-Id'] = anonToken;
+      const accessToken = getAccessToken();
+      if (accessToken) reqHeaders['X-Access-Token'] = accessToken;
+
       const resp = await fetch('/.netlify/functions/analyze', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: reqHeaders,
         body: JSON.stringify({ imageData: capturedB64, mediaType: capturedMediaType })
       });
-      const parsed = await resp.json();
-      if (parsed.error) throw new Error(parsed.error);
-      if (!isSubscribed()) { incrementScans(); updateCounter(); }
-      renderResults(parsed);
-      if (typeof gtag === 'function') gtag('event', 'scan_completed');
+
+      const issuedAnonToken = resp.headers.get('X-Anon-Id');
+      if (issuedAnonToken) setAnonToken(issuedAnonToken);
+
+      if (resp.status === 402) {
+        blockedByServer = true;
+        showPaywall();
+      } else {
+        const parsed = await resp.json();
+        if (parsed.error) throw new Error(parsed.error);
+        if (!isSubscribed()) { incrementScans(); updateCounter(); }
+        renderResults(parsed);
+        if (typeof gtag === 'function') gtag('event', 'scan_completed');
+      }
     } catch(e) {
       document.getElementById('results').innerHTML = '<div class="result-card"><p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p></div>';
     }
     document.getElementById('loader').style.display = 'none';
-    if (getScansLeft() > 0) {
+    if (!blockedByServer && getScansLeft() > 0) {
       setControls('<button class="btn btn-primary" onclick="startCamera()"><i class="ti ti-camera"></i> Scan another</button>' +
         '<button class="btn" onclick="document.getElementById(\'fileInput\').click()"><i class="ti ti-upload"></i> Upload image</button>');
     }
