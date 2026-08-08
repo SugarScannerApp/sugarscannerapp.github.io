@@ -182,6 +182,14 @@
       <span class="scans-left" id="scansLeftText">3 free scans remaining</span>
       <span class="scans-label" id="scanLabel">No account needed</span>
     </div>
+<div id="restoreAccessRow" style="text-align:center; font-size:12px; margin-bottom:1rem;">
+<a href="#" id="restoreAccessLink" onclick="toggleRestoreForm(event)" style="color:var(--teal-dark); font-weight:700; text-decoration:underline;">Already a subscriber? Restore access</a>
+<div id="restoreAccessForm" style="display:none; margin-top:8px; gap:8px; justify-content:center; flex-wrap:wrap;">
+<input type="email" id="restoreEmailInput" placeholder="Email you subscribed with" style="flex:1;min-width:180px;max-width:260px;padding:8px 12px;border:0.5px solid var(--border-md);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text-primary);" />
+<button class="btn btn-primary" onclick="submitRestoreAccess()" style="padding:8px 14px;font-size:13px;">Restore</button>
+</div>
+<div id="restoreAccessMsg" style="margin-top:6px; min-height:16px;"></div>
+</div>
     <div class="paywall" id="paywall">
       <h3>You've already started uncovering what's really in your food</h3>
       <p class="paywall-body">Keep protecting your health with unlimited scans.</p>
@@ -313,6 +321,53 @@
   function getAccessToken() {
     try { return localStorage.getItem(ACCESS_TOKEN_KEY) || ''; } catch(e) { return ''; }
   }
+
+function setAccessToken(token) {
+  try { if (token) localStorage.setItem(ACCESS_TOKEN_KEY, token); } catch(e) {}
+}
+
+function toggleRestoreForm(e) {
+  if (e) e.preventDefault();
+  const form = document.getElementById('restoreAccessForm');
+  const isOpen = form.style.display === 'flex';
+  form.style.display = isOpen ? 'none' : 'flex';
+}
+
+async function submitRestoreAccess() {
+  const emailInput = document.getElementById('restoreEmailInput');
+  const msg = document.getElementById('restoreAccessMsg');
+  const email = emailInput ? emailInput.value.trim() : '';
+  if (!email || !email.includes('@')) {
+    msg.style.color = 'var(--red-dark)';
+    msg.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  msg.style.color = 'var(--text-secondary)';
+  msg.textContent = 'Checking...';
+  try {
+    const resp = await fetch('/.netlify/functions/restore-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    });
+    const data = await resp.json();
+    if (!resp.ok || data.error) throw new Error(data.error || 'Something went wrong');
+    setAccessToken(data.token);
+    try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
+    msg.style.color = 'var(--green-text)';
+    msg.textContent = String.fromCodePoint(0x2713) + ' Access restored \u2014 enjoy unlimited scans!';
+    document.getElementById('restoreAccessRow').style.display = 'none';
+    document.getElementById('paywall').style.display = 'none';
+    document.getElementById('cameraFrame').style.opacity = '1';
+    document.getElementById('cameraFrame').style.pointerEvents = 'auto';
+    document.getElementById('controls').style.opacity = '1';
+    document.getElementById('controls').style.pointerEvents = 'auto';
+    updateCounter();
+  } catch(e) {
+    msg.style.color = 'var(--red-dark)';
+    msg.textContent = e.message || "We couldn't verify that email. Try again or email heather@sugarscannerapp.com.";
+  }
+}
 
   function isSubscribed() {
     try { return localStorage.getItem(SUBSCRIBED_KEY) === 'true'; } catch(e) { return false; }
