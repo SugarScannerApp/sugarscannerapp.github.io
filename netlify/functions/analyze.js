@@ -17,6 +17,7 @@
 
 const crypto = require('crypto');
 const { signToken, verifyToken } = require('./lib/access-token');
+const { connectLambda } = require('@netlify/blobs');
 const {
     getScanStore,
     hashIp,
@@ -37,6 +38,11 @@ function issueAnonToken() {
 }
 
 exports.handler = async function(event, context) {
+        // @netlify/blobs needs this called first when a function uses the classic
+        // Lambda-compatible handler signature (event, context) instead of the
+        // newer Request/Response signature — without it, getStore() throws
+        // MissingBlobsEnvironmentError even though the site has Blobs available.
+        connectLambda(event);
     if (event.httpMethod !== 'POST') {
           return { statusCode: 405, body: 'Method Not Allowed' };
     }
