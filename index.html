@@ -454,8 +454,51 @@ async function submitRestoreAccess() {
       document.getElementById('controls').style.pointerEvents = 'auto';
 
       const referralCode = params.get('ref');
-      const subscriberEmail = params.get('email') || '';
+      let subscriberEmail = params.get('email') || '';
       const sessionId = params.get('session_id');
+
+      function runReferralFlow() {
+        if (referralCode) {
+          fetch('/.netlify/functions/track-referral', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ referralCode: referralCode, newSubscriberEmail: subscriberEmail })
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            console.log('Referral tracked:', data);
+          })
+          .catch(function(err) { console.error('Referral tracking error:', err); });
+        }
+
+        setTimeout(function() {
+          if (!subscriberEmail) {
+            console.warn('generate-referral skipped — no subscriber email was available.');
+            return;
+          }
+          fetch('/.netlify/functions/generate-referral', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: subscriberEmail, stripeCustomerId: '' })
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data.referral_code) {
+              const banner = document.getElementById('successBanner');
+              if (banner) {
+                banner.innerHTML = '🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>' +
+                  '<span style="font-size:13px;margin-top:8px;display:block;background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">' +
+                  '🌿 <strong>Your referral code: <span style="font-family:monospace;font-size:16px;letter-spacing:0.05em;">' +
+                  data.referral_code + '</span></strong><br>' +
+                  'Share it with friends — when 3 people subscribe using your code you get <strong>3 months free!</strong><br>' +
+                  '<a href="/refer.html" style="color:var(--teal-dark);font-weight:700;text-decoration:underline;">Track your referrals →</a>' +
+                  '</span>';
+              }
+            }
+          })
+          .catch(function(err) { console.error('Referral generation error:', err); });
+        }, 1500);
+      }
 
       if (sessionId) {
         fetch('/.netlify/functions/verify-checkout-session', {
@@ -468,48 +511,20 @@ async function submitRestoreAccess() {
           if (!result.ok || result.data.error) throw new Error(result.data.error || 'Checkout verification failed');
           setAccessToken(result.data.token);
           try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
+          // verify-checkout-session looks up the real subscriber email from
+          // Stripe directly, since the success_url never carries an ?email=
+          // param — that was the cause of generate-referral's 400 errors.
+          if (result.data.email) subscriberEmail = result.data.email;
         })
         .catch(function(err) {
           console.error('verify-checkout-session failed — UI is unlocked but no signed access token was issued:', err);
+        })
+        .then(function() {
+          runReferralFlow();
         });
+      } else {
+        runReferralFlow();
       }
-
-      if (referralCode) {
-        fetch('/.netlify/functions/track-referral', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ referralCode: referralCode, newSubscriberEmail: subscriberEmail })
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          console.log('Referral tracked:', data);
-        })
-        .catch(function(err) { console.error('Referral tracking error:', err); });
-      }
-
-      setTimeout(function() {
-        fetch('/.netlify/functions/generate-referral', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: subscriberEmail, stripeCustomerId: '' })
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (data.referral_code) {
-            const banner = document.getElementById('successBanner');
-            if (banner) {
-              banner.innerHTML = '🎉 Welcome to Sugar Scanner! Your subscription is active — enjoy unlimited scans!<br>' +
-                '<span style="font-size:13px;margin-top:8px;display:block;background:rgba(29,158,117,0.1);border-radius:8px;padding:10px 12px;">' +
-                '🌿 <strong>Your referral code: <span style="font-family:monospace;font-size:16px;letter-spacing:0.05em;">' +
-                data.referral_code + '</span></strong><br>' +
-                'Share it with friends — when 3 people subscribe using your code you get <strong>3 months free!</strong><br>' +
-                '<a href="/refer.html" style="color:var(--teal-dark);font-weight:700;text-decoration:underline;">Track your referrals →</a>' +
-                '</span>';
-            }
-          }
-        })
-        .catch(function(err) { console.error('Referral generation error:', err); });
-      }, 1500);
 
       window.history.replaceState({}, '', '/');
     }
