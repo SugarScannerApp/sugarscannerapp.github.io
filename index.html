@@ -455,6 +455,24 @@ async function submitRestoreAccess() {
 
       const referralCode = params.get('ref');
       const subscriberEmail = params.get('email') || '';
+      const sessionId = params.get('session_id');
+
+      if (sessionId) {
+        fetch('/.netlify/functions/verify-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: sessionId })
+        })
+        .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+        .then(function(result) {
+          if (!result.ok || result.data.error) throw new Error(result.data.error || 'Checkout verification failed');
+          setAccessToken(result.data.token);
+          try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
+        })
+        .catch(function(err) {
+          console.error('verify-checkout-session failed — UI is unlocked but no signed access token was issued:', err);
+        });
+      }
 
       if (referralCode) {
         fetch('/.netlify/functions/track-referral', {
