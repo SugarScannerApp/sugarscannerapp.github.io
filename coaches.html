@@ -51,23 +51,18 @@
     .step-num{width:40px;height:40px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;}
     .step-content h3{font-size:17px;font-weight:700;margin-bottom:4px;}
     .step-content p{font-size:14px;color:var(--text-secondary);line-height:1.65;}
-    .pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;margin-top:2rem;}
-    .pricing-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-xl);padding:2rem;text-align:center;}
-    .pricing-card.featured{background:var(--navy);color:#fff;border-color:transparent;}
-    .pricing-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.75rem;}
-    .pricing-card.featured .pricing-label{color:#9FE1CB;}
-    .pricing-price{font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1;}
-    .pricing-period{font-size:14px;color:var(--text-secondary);margin-bottom:1.25rem;}
-    .pricing-card.featured .pricing-period{color:rgba(255,255,255,0.6);}
-    .pricing-features{text-align:left;font-size:14px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
-    .pricing-card.featured .pricing-features{color:rgba(255,255,255,0.75);}
+    .pricing-card{background:var(--navy);border-radius:var(--radius-xl);padding:2.5rem;color:#fff;}
+    .pricing-amounts{display:flex;gap:2rem;margin-bottom:1.75rem;flex-wrap:wrap;}
+    .pricing-amount{flex:1;min-width:140px;}
+    .pricing-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#9FE1CB;margin-bottom:0.5rem;}
+    .pricing-price{font-size:42px;font-weight:800;letter-spacing:-0.02em;line-height:1;color:#fff;}
+    .pricing-period{font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px;}
+    .pricing-divider{width:1px;background:rgba(255,255,255,0.15);align-self:stretch;}
+    .pricing-features{font-size:14px;color:rgba(255,255,255,0.75);display:flex;flex-direction:column;gap:8px;margin-bottom:1.75rem;}
     .pricing-feat{display:flex;align-items:center;gap:8px;}
-    .pricing-feat i{color:var(--teal);font-size:14px;flex-shrink:0;}
-    .pricing-card.featured .pricing-feat i{color:#9FE1CB;}
-    .btn-pricing{display:block;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-md);padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;}
+    .pricing-feat i{color:#9FE1CB;font-size:14px;flex-shrink:0;}
+    .btn-pricing{display:inline-block;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-md);padding:13px 32px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;}
     .btn-pricing:hover{background:var(--teal-dark);}
-    .btn-pricing-outline{display:block;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.3);border-radius:var(--radius-md);padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;}
-    .btn-pricing-outline:hover{border-color:#fff;}
     .audience-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:2rem;}
     .audience-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;display:flex;align-items:center;gap:12px;}
     .audience-card i{color:var(--teal);font-size:22px;flex-shrink:0;}
@@ -232,33 +227,28 @@
     <div class="section-eyebrow">Pricing</div>
     <h2 class="section-title">Simple transparent pricing</h2>
     <p class="section-body">One setup fee to build your branded version. One monthly fee to keep it running. No hidden costs, no per-user fees, no surprises.</p>
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="pricing-label">Setup</div>
-        <div class="pricing-price">$600</div>
-        <div class="pricing-period">one time</div>
-        <div class="pricing-features">
-          <div class="pricing-feat"><i class="ti ti-check"></i> Custom branding and logo</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> Custom URL deployment</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> Full AI scanning capability</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> Preview and approval process</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> Launch support</div>
+    <div class="pricing-card">
+      <div class="pricing-amounts">
+        <div class="pricing-amount">
+          <div class="pricing-label">One-time setup</div>
+          <div class="pricing-price">$600</div>
+          <div class="pricing-period">custom branding + deployment</div>
         </div>
-        <a href="#contact" class="btn-pricing">Get started →</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-label">Monthly</div>
-        <div class="pricing-price" style="color:#9FE1CB;">$40</div>
-        <div class="pricing-period">per month</div>
-        <div class="pricing-features">
-          <div class="pricing-feat"><i class="ti ti-check"></i> Unlimited client scans</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> All platform updates included</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> New ingredient data as released</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> Direct support from Heather</div>
-          <div class="pricing-feat"><i class="ti ti-check"></i> Cancel anytime</div>
+        <div class="pricing-divider"></div>
+        <div class="pricing-amount">
+          <div class="pricing-label">Then monthly</div>
+          <div class="pricing-price">$40</div>
+          <div class="pricing-period">per month, cancel anytime</div>
         </div>
-        <a href="#contact" class="btn-pricing-outline">Get started →</a>
       </div>
+      <div class="pricing-features">
+        <div class="pricing-feat"><i class="ti ti-check"></i> Your logo, colors, and custom URL</div>
+        <div class="pricing-feat"><i class="ti ti-check"></i> Full AI ingredient scanning for unlimited clients</div>
+        <div class="pricing-feat"><i class="ti ti-check"></i> All platform updates included automatically</div>
+        <div class="pricing-feat"><i class="ti ti-check"></i> Preview and approval before anything goes live</div>
+        <div class="pricing-feat"><i class="ti ti-check"></i> Direct support from Heather</div>
+      </div>
+      <a href="#contact" class="btn-pricing">Get your branded version →</a>
     </div>
     <p style="font-size:13px;color:var(--text-secondary);margin-top:1rem;text-align:center;">Larger practice or corporate wellness program? <a href="mailto:heather@sugarscannerapp.com" style="color:var(--teal);">Email for custom pricing →</a></p>
   </div>
@@ -309,10 +299,6 @@
       <div class="faq-item">
         <div class="faq-q">What ingredients does it identify?</div>
         <div class="faq-a">Sugar Scanner identifies over 60 names for sugar and sweeteners including maltodextrin, high fructose corn syrup, brown rice syrup, agave nectar, fruit juice concentrate, maltitol, sucralose, acesulfame K, and many more — each with its glycemic index, health effects, and how it's processed in the body.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">I'm also hiring for my practice. Can you help with that?</div>
-        <div class="faq-a">Yes — I also run McKenzie Recruiting, a specialized recruiting firm. If you're looking for nutrition professionals, dietitians, or health coaches I'd love to help on both fronts. Mention it in your message below.</div>
       </div>
     </div>
   </div>
@@ -366,12 +352,6 @@
           <label for="message">Tell me about your practice and how you'd use Sugar Scanner</label>
           <textarea id="message" placeholder="What do you specialize in? Who are your clients? What health goals are you helping them achieve?"></textarea>
         </div>
-        <div class="form-group full">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:400;">
-            <input type="checkbox" id="recruiting" style="width:16px;height:16px;" />
-            I'm also hiring for my practice — I'd like to hear about McKenzie Recruiting too
-          </label>
-        </div>
       </div>
       <button type="submit" class="btn-submit">Send my inquiry →</button>
       <div class="form-result" id="formResult"></div>
@@ -399,7 +379,6 @@
     var role = document.getElementById('role').value;
     var clients = document.getElementById('clients').value;
     var message = document.getElementById('message').value.trim();
-    var recruiting = document.getElementById('recruiting').checked;
     if (!firstName || !lastName || !email) {
       result.style.color = 'var(--red-dark)';
       result.textContent = 'Please fill in your name and email address.';
@@ -412,7 +391,7 @@
       'Practice: ' + (practiceName || 'Not provided') + '\n' +
       'Role: ' + (role || 'Not provided') + '\n' +
       'Clients: ' + (clients || 'Not provided') + '\n' +
-      'McKenzie Recruiting interest: ' + (recruiting ? 'Yes' : 'No') + '\n\n' +
+      '\n' +
       'Message:\n' + (message || 'No message provided')
     );
     window.location.href = 'mailto:heather@sugarscannerapp.com?subject=' + subject + '&body=' + body;
