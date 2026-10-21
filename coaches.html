@@ -93,6 +93,10 @@
     .btn-submit{background:var(--teal);color:#fff;border:none;border-radius:var(--radius-md);padding:13px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:0.75rem;}
     .btn-submit:hover{background:var(--teal-dark);}
     .form-result{font-size:14px;margin-top:0.75rem;min-height:20px;}
+    .btn-pay-now{display:none;margin-top:0.75rem;background:transparent;color:var(--teal-dark);border:1.5px solid var(--teal);border-radius:var(--radius-md);padding:11px 26px;font-size:14px;font-weight:700;text-decoration:none;}
+    .btn-pay-now:hover{background:var(--teal);color:#fff;}
+    .pay-now-note{display:none;font-size:12px;color:var(--text-secondary);margin-top:6px;}
+    .paid-banner{display:none;background:#EAF3DE;color:#3B6D11;border:0.5px solid #3B6D11;border-radius:8px;padding:12px 14px;font-size:14px;font-weight:500;margin-bottom:1rem;line-height:1.55;}
     .faq{display:flex;flex-direction:column;gap:1rem;margin-top:2rem;}
     .faq-item{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;}
     .faq-q{font-size:15px;font-weight:700;margin-bottom:0.5rem;}
@@ -110,7 +114,7 @@
   <div class="nav-links">
     <a href="/blog.html" class="nav-link">Blog</a>
     <a href="/#newsletter" class="nav-link">Newsletter</a>
-    <a href="#contact" class="nav-cta">Get started →</a>
+    <a href="#contact" class="nav-cta" onclick="track('coach_cta_click', { location: 'nav' })">Get started →</a>
   </div>
 </nav>
 
@@ -119,8 +123,8 @@
   <h1>Give your clients a tool that <span>actually changes behavior</span></h1>
   <p class="hero-sub">White label Sugar Scanner under your brand. Your clients scan any ingredient label and instantly see every hidden sugar — the name, the glycemic index, and what it does inside their body.</p>
   <div class="hero-btns">
-    <a href="#contact" class="btn-primary-hero">Get your branded version →</a>
-    <a href="/" class="btn-secondary-hero">See it in action first</a>
+    <a href="#contact" class="btn-primary-hero" onclick="track('coach_cta_click', { location: 'hero' })">Get your branded version →</a>
+    <a href="/" class="btn-secondary-hero" onclick="track('coach_demo_click')">See it in action first</a>
   </div>
   <div class="proof-strip">
     <span class="proof-item"><i class="ti ti-check"></i> Your logo and branding</span>
@@ -248,14 +252,18 @@
         <div class="pricing-feat"><i class="ti ti-check"></i> Preview and approval before anything goes live</div>
         <div class="pricing-feat"><i class="ti ti-check"></i> Direct support from Heather</div>
       </div>
-      <a href="#contact" class="btn-pricing">Get your branded version →</a>
+      <a href="#contact" class="btn-pricing" onclick="track('coach_cta_click', { location: 'pricing' })">Get your branded version →</a>
+      <div>
+        <a href="#" class="btn-pay-now" id="payNowBtn" target="_blank" rel="noopener" onclick="track('coach_pay_now_click', { location: 'pricing' })">Ready now? Pay setup &amp; get started →</a>
+        <div class="pay-now-note" id="payNowNote">Pay the $600 setup securely through Stripe. Your $40/month starts once your branded version goes live.</div>
+      </div>
     </div>
     <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-top:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
       <div>
         <div style="font-size:13px;font-weight:700;color:var(--text-primary);">500+ clients?</div>
         <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">Corporate wellness programs and larger practices — $600 setup + $100/month</div>
       </div>
-      <a href="#contact" class="btn-pricing" style="white-space:nowrap;">Get started →</a>
+      <a href="#contact" class="btn-pricing" style="white-space:nowrap;" onclick="track('coach_cta_click', { location: 'enterprise' })">Get started →</a>
     </div>
   </div>
 
@@ -313,27 +321,31 @@
     <div class="section-eyebrow">Get started</div>
     <h2>Let's get your branded version live</h2>
     <p>Fill out the form below and I'll follow up within 24 hours to discuss your practice, answer any questions, and get started on your custom version.</p>
-    <form id="contactForm">
+    <div class="paid-banner" id="paidBanner">🎉 Thank you — your setup payment went through! Fill out the form below with your practice details so I can start building your branded version. I'll email you within 24 hours.</div>
+    <form id="contactForm" name="coach-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="coach-inquiry" />
+      <input type="hidden" name="paid_setup" id="paidSetup" value="no" />
+      <p style="display:none;"><label>Leave this empty: <input name="bot-field" /></label></p>
       <div class="form-grid">
         <div class="form-group">
           <label for="firstName">First name</label>
-          <input type="text" id="firstName" placeholder="Your first name" required />
+          <input type="text" id="firstName" name="firstName" placeholder="Your first name" required />
         </div>
         <div class="form-group">
           <label for="lastName">Last name</label>
-          <input type="text" id="lastName" placeholder="Your last name" required />
+          <input type="text" id="lastName" name="lastName" placeholder="Your last name" required />
         </div>
         <div class="form-group">
           <label for="email">Email address</label>
-          <input type="email" id="email" placeholder="your@email.com" required />
+          <input type="email" id="email" name="email" placeholder="your@email.com" required />
         </div>
         <div class="form-group">
           <label for="practiceName">Practice or business name</label>
-          <input type="text" id="practiceName" placeholder="Your practice name" />
+          <input type="text" id="practiceName" name="practiceName" placeholder="Your practice name" />
         </div>
         <div class="form-group">
           <label for="role">Your role</label>
-          <select id="role">
+          <select id="role" name="role">
             <option value="">Select your role</option>
             <option>Registered Dietitian</option>
             <option>Nutrition Coach</option>
@@ -346,7 +358,7 @@
         </div>
         <div class="form-group">
           <label for="clients">Approximate number of clients</label>
-          <select id="clients">
+          <select id="clients" name="clients">
             <option value="">Select a range</option>
             <option>1–25 clients</option>
             <option>26–100 clients</option>
@@ -356,7 +368,7 @@
         </div>
         <div class="form-group full">
           <label for="message">Tell me about your practice and how you'd use Sugar Scanner</label>
-          <textarea id="message" placeholder="What do you specialize in? Who are your clients? What health goals are you helping them achieve?"></textarea>
+          <textarea id="message" name="message" placeholder="What do you specialize in? Who are your clients? What health goals are you helping them achieve?"></textarea>
         </div>
       </div>
       <button type="submit" class="btn-submit">Send my inquiry →</button>
@@ -375,36 +387,80 @@
 </footer>
 
 <script>
+  // ============================================================
+  // STRIPE SETUP LINK — paste your Stripe Payment Link between the
+  // quotes below (it starts with https://buy.stripe.com/).
+  // While it's empty, the "Ready now? Pay setup" button stays hidden.
+  // ============================================================
+  const STRIPE_SETUP_LINK = '';
+
+  function track(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch(e) {}
+  }
+
+  // Show the Pay Now button only once a Stripe link is filled in
+  (function() {
+    if (STRIPE_SETUP_LINK && STRIPE_SETUP_LINK.indexOf('https://') === 0) {
+      var btn = document.getElementById('payNowBtn');
+      btn.href = STRIPE_SETUP_LINK;
+      btn.style.display = 'inline-block';
+      document.getElementById('payNowNote').style.display = 'block';
+    }
+  })();
+
+  // Coming back from Stripe: set the Stripe "after payment" redirect to
+  // https://sugarscannerapp.com/coaches?paid=true#contact
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('paid') === 'true') {
+      document.getElementById('paidBanner').style.display = 'block';
+      document.getElementById('paidSetup').value = 'yes';
+      track('coach_setup_paid');
+    }
+  })();
+
   document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    var form = this;
     var result = document.getElementById('formResult');
+    var btn = form.querySelector('.btn-submit');
     var firstName = document.getElementById('firstName').value.trim();
     var lastName = document.getElementById('lastName').value.trim();
     var email = document.getElementById('email').value.trim();
-    var practiceName = document.getElementById('practiceName').value.trim();
-    var role = document.getElementById('role').value;
-    var clients = document.getElementById('clients').value;
-    var message = document.getElementById('message').value.trim();
-    if (!firstName || !lastName || !email) {
+    if (!firstName || !lastName || !email || email.indexOf('@') === -1) {
       result.style.color = 'var(--red-dark)';
-      result.textContent = 'Please fill in your name and email address.';
+      result.textContent = 'Please fill in your name and a valid email address.';
       return;
     }
-    var subject = encodeURIComponent('White Label Inquiry — ' + firstName + ' ' + lastName + (practiceName ? ' (' + practiceName + ')' : ''));
-    var body = encodeURIComponent(
-      'Name: ' + firstName + ' ' + lastName + '\n' +
-      'Email: ' + email + '\n' +
-      'Practice: ' + (practiceName || 'Not provided') + '\n' +
-      'Role: ' + (role || 'Not provided') + '\n' +
-      'Clients: ' + (clients || 'Not provided') + '\n' +
-      '\n' +
-      'Message:\n' + (message || 'No message provided')
-    );
-    window.location.href = 'mailto:heather@sugarscannerapp.com?subject=' + subject + '&body=' + body;
-    setTimeout(function() {
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    result.textContent = '';
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Status ' + res.status);
+      track('coach_inquiry_submitted', {
+        role: document.getElementById('role').value || 'not_given',
+        clients: document.getElementById('clients').value || 'not_given',
+        paid_setup: document.getElementById('paidSetup').value
+      });
+      form.reset();
+      document.getElementById('paidSetup').value = (new URLSearchParams(window.location.search).get('paid') === 'true') ? 'yes' : 'no';
       result.style.color = 'var(--green-text)';
-      result.textContent = '✅ Your email client should have opened. If not, email heather@sugarscannerapp.com directly.';
-    }, 800);
+      result.textContent = '✅ Thanks, ' + firstName + '! Your inquiry is in. I\'ll email you at ' + email + ' within 24 hours.';
+      btn.textContent = 'Sent ✓';
+    })
+    .catch(function() {
+      track('coach_inquiry_error');
+      result.style.color = 'var(--red-dark)';
+      result.innerHTML = 'Something went wrong sending your inquiry. Please email <a href="mailto:heather@sugarscannerapp.com" style="color:inherit;text-decoration:underline;">heather@sugarscannerapp.com</a> directly.';
+      btn.disabled = false;
+      btn.textContent = 'Send my inquiry →';
+    });
   });
 </script>
 </body>
