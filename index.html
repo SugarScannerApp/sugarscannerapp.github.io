@@ -52,6 +52,10 @@
     .hero h1 span { color: #9FE1CB; }
     .hero-tagline { font-size: clamp(13px, 1.8vw, 15px); font-weight: 700; color: #9FE1CB; max-width: 480px; margin: 0 auto 0.75rem; letter-spacing: -0.01em; }
     .hero-sub { font-size: clamp(14px, 2vw, 17px); color: rgba(255,255,255,0.72); max-width: 440px; margin: 0 auto 1.5rem; line-height: 1.7; }
+    /* NEW: big scan button in the hero */
+    .hero-scan-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--navy); font-size: 16px; font-weight: 800; padding: 14px 26px; border-radius: 999px; text-decoration: none; margin: 0 auto 1.25rem; box-shadow: 0 6px 20px rgba(0,0,0,0.25); transition: transform 0.1s; }
+    .hero-scan-btn:active { transform: scale(0.97); }
+    .hero-scan-btn i { font-size: 20px; color: var(--teal); }
     .hero-proof { display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; }
     .proof-item { font-size: 12px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 5px; }
     .proof-item i { color: #9FE1CB; font-size: 13px; }
@@ -59,7 +63,7 @@
     .shock-strip p { font-size: 13px; color: var(--red-dark); font-weight: 500; line-height: 1.6; max-width: 560px; margin: 0 auto; }
     .shock-strip strong { font-weight: 700; }
     .main { max-width: 600px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; display: flex; flex-direction: column; gap: 1.5rem; }
-    .scanner-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: 0 4px 28px rgba(0,0,0,0.07); }
+    .scanner-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: 0 4px 28px rgba(0,0,0,0.07); scroll-margin-top: 64px; }
     .scanner-label { text-align: center; margin-bottom: 1rem; }
     .scanner-label h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 3px; }
     .scanner-label p { font-size: 13px; color: var(--text-secondary); }
@@ -147,7 +151,7 @@
   <a href="#" class="nav-logo"><i class="ti ti-leaf"></i> Sugar Scanner</a>
   <div style="display:flex;align-items:center;gap:1rem;">
   <a href="/blog.html" style="color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;font-family:inherit;">Blog</a>
-  <a href="#scanner" class="nav-cta">Scan free →</a>
+  <a href="#scanner" class="nav-cta" onclick="track('scan_cta_click', { location: 'nav' })">Scan free →</a>
 </div>
 </nav>
 
@@ -156,6 +160,8 @@
   <h1>That "healthy" food in your cart?<br>It might have <span>4 different names for sugar.</span></h1>
   <p class="hero-tagline">Sugar Scanner is a free AI tool that reads any ingredient label and reveals what's really inside.</p>
   <p class="hero-sub">Most people read labels — but sugar hides under 60+ names most of us have never heard of. Snap any ingredient label and find out what's really inside.</p>
+  <!-- NEW: big scan button so phone visitors don't have to scroll to find the scanner -->
+  <a href="#scanner" class="hero-scan-btn" onclick="track('scan_cta_click', { location: 'hero' })"><i class="ti ti-camera"></i> Scan a label now — free</a>
   <div class="hero-proof">
     <span class="proof-item"><i class="ti ti-check"></i> First 3 scans free</span>
     <span class="proof-item"><i class="ti ti-check"></i> No app download</span>
@@ -233,7 +239,7 @@
         <a href="#newsletter" style="color:var(--teal-dark); font-weight:700; font-size:13px; text-decoration:underline;">Join the newsletter →</a>
       </div>
       <div class="paywall-footer-note">
-        Nutrition coach? <a href="/coaches">Get your own branded version →</a>
+        Nutrition coach? <a href="/coaches" onclick="track('coaches_click', { location: 'paywall' })">Get your own branded version →</a>
       </div>
     </div>
     <div class="camera-frame" id="cameraFrame">
@@ -298,10 +304,15 @@
   <p>Built by Heather McKenzie · NASM Certified Nutrition Coach · Behavior Change Specialist</p>
   <p><a href="mailto:heather@sugarscannerapp.com">heather@sugarscannerapp.com</a> &nbsp;·&nbsp; <a href="https://billing.stripe.com/p/login/00wdRa0v4eEq8zT1Cb2Nq00">Manage subscription</a></p>
   <p style="margin-top:6px;">© 2026 Sugar Scanner LLC · Oregon · All rights reserved</p>
-  <a href="/coaches" style="display:inline-block;margin-top:10px;padding:6px 16px;border:0.5px solid rgba(159,225,203,0.3);border-radius:999px;font-size:12px;color:#9FE1CB;text-decoration:none;">Nutrition professional? Get your own branded version →</a>
+  <a href="/coaches" onclick="track('coaches_click', { location: 'footer' })" style="display:inline-block;margin-top:10px;padding:6px 16px;border:0.5px solid rgba(159,225,203,0.3);border-radius:999px;font-size:12px;color:#9FE1CB;text-decoration:none;">Nutrition professional? Get your own branded version →</a>
 </footer>
 
 <script>
+  // NEW: one safe helper for all Google Analytics events
+  function track(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch(e) {}
+  }
+
   const MAX_FREE_SCANS = 3;
   const STORAGE_KEY = 'sugar_scanner_scans';
   const SUBSCRIBED_KEY = 'sugar_scanner_subscribed';
@@ -354,6 +365,7 @@ async function submitRestoreAccess() {
     if (!resp.ok || data.error) throw new Error(data.error || 'Something went wrong');
     setAccessToken(data.token);
     try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
+    track('access_restored');
     msg.style.color = 'var(--green-text)';
     msg.textContent = String.fromCodePoint(0x2713) + ' Access restored \u2014 enjoy unlimited scans!';
     document.getElementById('restoreAccessRow').style.display = 'none';
@@ -416,11 +428,11 @@ async function submitRestoreAccess() {
     document.getElementById('cameraFrame').style.pointerEvents = 'none';
     document.getElementById('controls').style.opacity = '0.4';
     document.getElementById('controls').style.pointerEvents = 'none';
-    if (typeof gtag === 'function') gtag('event', 'paywall_shown');
+    track('paywall_shown');
   }
 
   async function subscribe(plan, cardEl) {
-    if (typeof gtag === 'function') gtag('event', 'subscribe_clicked', { plan: plan });
+    track('subscribe_clicked', { plan: plan });
     const loadingEl = document.getElementById(plan + 'Loading');
     if (loadingEl) loadingEl.style.display = 'block';
     cardEl.style.pointerEvents = 'none';
@@ -434,8 +446,10 @@ async function submitRestoreAccess() {
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error);
+      track('checkout_started', { plan: plan });
       window.location.href = data.url;
     } catch(e) {
+      track('checkout_error', { plan: plan });
       alert('Something went wrong. Please try again or email heather@sugarscannerapp.com');
       if (loadingEl) loadingEl.style.display = 'none';
       cardEl.style.pointerEvents = 'auto';
@@ -446,6 +460,7 @@ async function submitRestoreAccess() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('subscribed') === 'true') {
       try { localStorage.setItem(SUBSCRIBED_KEY, 'true'); } catch(e) {}
+      track('subscription_success');
       document.getElementById('successBanner').style.display = 'block';
       document.getElementById('paywall').style.display = 'none';
       document.getElementById('cameraFrame').style.opacity = '1';
@@ -536,6 +551,7 @@ async function submitRestoreAccess() {
 
   async function startCamera() {
     if (getScansLeft() === 0) { showPaywall(); return; }
+    track('camera_opened');
     try {
       stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
       const video = document.getElementById('video');
@@ -547,6 +563,7 @@ async function submitRestoreAccess() {
       setControls('<button class="btn btn-primary" onclick="capture()"><i class="ti ti-camera"></i> Take photo</button>' +
         '<button class="btn" onclick="stopCamera()"><i class="ti ti-x"></i> Cancel</button>');
     } catch(e) {
+      track('camera_denied');
       setStatus('Camera access denied — try uploading an image instead.');
     }
   }
@@ -568,6 +585,7 @@ async function submitRestoreAccess() {
     canvas.getContext('2d').drawImage(video, 0, 0);
     capturedB64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
     capturedMediaType = 'image/jpeg';
+    track('photo_ready', { method: 'camera' });
     if (stream) { stream.getTracks().forEach(function(t) { t.stop(); }); stream = null; }
     const preview = document.getElementById('preview');
     preview.src = 'data:image/jpeg;base64,' + capturedB64;
@@ -587,6 +605,7 @@ async function submitRestoreAccess() {
     reader.onload = function(e) {
       const dataUrl = e.target.result;
       capturedB64 = dataUrl.split(',')[1];
+      track('photo_ready', { method: 'upload' });
       const preview = document.getElementById('preview');
       preview.src = dataUrl;
       preview.style.display = 'block';
@@ -613,6 +632,7 @@ async function submitRestoreAccess() {
   async function analyzeImage() {
     if (getScansLeft() === 0) { showPaywall(); return; }
     if (!capturedB64) return;
+    track('scan_started');
     document.getElementById('loader').style.display = 'flex';
     document.getElementById('results').innerHTML = '';
     setControls('');
@@ -636,15 +656,21 @@ async function submitRestoreAccess() {
 
       if (resp.status === 402) {
         blockedByServer = true;
+        track('scan_blocked_by_server');
         showPaywall();
       } else {
         const parsed = await resp.json();
         if (parsed.error) throw new Error(parsed.error);
         if (!isSubscribed()) { incrementScans(); updateCounter(); }
         renderResults(parsed);
-        if (typeof gtag === 'function') gtag('event', 'scan_completed');
+        track('scan_completed', {
+          sugars_found: (parsed.sugar_alternatives || []).length,
+          label_found: !!parsed.ingredients_found,
+          is_subscriber: isSubscribed()
+        });
       }
     } catch(e) {
+      track('scan_failed', { reason: String((e && e.message) || 'unknown').slice(0, 80) });
       document.getElementById('results').innerHTML = '<div class="result-card"><p class="summary-text" style="color:var(--red-dark);">Something went wrong. Please try again.</p></div>';
     }
     document.getElementById('loader').style.display = 'none';
@@ -692,7 +718,7 @@ async function submitRestoreAccess() {
           '<div class="sugar-detail"><strong>How it\'s processed:</strong> ' + (s.how_processed || '') + '</div></div>';
       });
     }
-    html += '<div class="result-card" style="text-align:center; border-left: none;"><p style="font-size:14px; font-weight:700; margin-bottom:4px;">🌿 Want a breakdown like this every week?</p><p style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">Get a new "healthy" product scanned and exposed every Tuesday — free.</p><a href="#newsletter" style="background:var(--teal); color:#fff; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-block;">Subscribe free →</a></div>';
+    html += '<div class="result-card" style="text-align:center; border-left: none;"><p style="font-size:14px; font-weight:700; margin-bottom:4px;">🌿 Want a breakdown like this every week?</p><p style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">Get a new "healthy" product scanned and exposed every Tuesday — free.</p><a href="#newsletter" onclick="track(\'newsletter_cta_click\', { location: \'results\' })" style="background:var(--teal); color:#fff; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-block;">Subscribe free →</a></div>';
     el.innerHTML = html;
   }
 
@@ -706,17 +732,22 @@ async function submitRestoreAccess() {
     }
     result.style.color = '#9FE1CB';
     result.textContent = 'Subscribing...';
+    const successHtml = '✅ You\'re in! Check your inbox to confirm — and <a href="/downloads/60-names-for-sugar.pdf" target="_blank" style="color:#9FE1CB;text-decoration:underline;">download your cheat sheet here</a>.';
     fetch('https://app.kit.com/forms/4f16c6a268/subscriptions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email_address: email })
     })
-    .then(function() {
-      result.innerHTML = '✅ You\'re in! Check your inbox to confirm — and <a href="/downloads/60-names-for-sugar.pdf" target="_blank" style="color:#9FE1CB;text-decoration:underline;">download your cheat sheet here</a>.';
+    .then(function(res) {
+      // NEW: record whether Kit actually accepted the signup.
+      // The visitor still sees the same success message either way.
+      track(res && res.ok ? 'newsletter_signup' : 'newsletter_error', { status: res ? res.status : 0 });
+      result.innerHTML = successHtml;
       document.getElementById('homeEmailInput').value = '';
     })
     .catch(function() {
-      result.innerHTML = '✅ You\'re in! Check your inbox to confirm — and <a href="/downloads/60-names-for-sugar.pdf" target="_blank" style="color:#9FE1CB;text-decoration:underline;">download your cheat sheet here</a>.';
+      track('newsletter_error', { status: 0 });
+      result.innerHTML = successHtml;
       document.getElementById('homeEmailInput').value = '';
     });
   }
